@@ -28,6 +28,10 @@ import {
 } from "@/components/ui/form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod";
+import useCategories from "@/hooks/useCategories";
+
+import { setCategories } from "@/store/slices/categorySlice";
+import { useAppDispatch, useAppSelector } from '@/store/store';
 
 interface AddProductFormValues {
   name: string;
@@ -37,11 +41,36 @@ interface AddProductFormValues {
   offer: number;
   quantity: "ilimitado" | "limitado";
   stock: number;
+  categories: [];
 }
 
 export default function AddCategory() {
   const router = useRouter();
+
+  const dispatch = useAppDispatch();
+  const { getCategories } = useCategories();
+  const categories = useAppSelector((state) => state.categories.categories);
+
   const [images, setImages] = useState<File[]>([]);
+  const [imageError, setImageError] = useState<string | null>(null);
+  const [quantityOptions, setQuantityOptions] = useState("ilimitado");
+
+  React.useEffect(() => {
+    getCategoryList();
+  }, []);
+
+  const getCategoryList = () => {
+    getCategories().then((res) => {
+      console.log("Category list response:", res.data);
+      if (Array.isArray(res.data) && res.data.every(item => 'id' in item && 'name' in item && 'slug' in item && 'image' in item)) {
+        dispatch(setCategories(res.data));
+      } else {
+        console.error("Invalid data format:", res.data);
+      }
+      dispatch(setCategories(res.data));
+    });
+  };
+
   const {
     control,
     handleSubmit,
@@ -63,6 +92,10 @@ export default function AddCategory() {
   });
 
   const onSubmit: SubmitHandler<AddProductFormValues> = data => {
+    if (images.length == 0) {
+      setImageError("Debes subir al menos una imagen");
+    }
+    console.log(quantityOptions);
     console.log({ ...data, images });
   };
 
@@ -73,6 +106,7 @@ export default function AddCategory() {
         alert("Puedes subir un máximo de 4 imágenes.");
         return;
       }
+      setImageError(null);
       setImages(prevImages => {
         const newImages = [...prevImages, ...files].slice(0, 4); // Máximo 4 imágenes
         clearErrors("images");
@@ -80,6 +114,11 @@ export default function AddCategory() {
       });
     }
   };
+
+  const handleQuantityChange = (value: "ilimitado" | "limitado") => {
+    setQuantityOptions(value);
+    return value
+  }
 
   return (
     <React.Fragment>
@@ -89,7 +128,6 @@ export default function AddCategory() {
             <div className="text-2xl">Información</div>
             <div className="mt-3 p-4 bg-white rounded-xl">
               <div className="mb-2">Nombre del artículo</div>
-
               <Controller
                 name="name"
                 control={control}
@@ -135,6 +173,12 @@ export default function AddCategory() {
                   onChange={handleImageUpload}
                 />
                 <CirclePlus size={48} className="text-gray-500" />
+
+                <div className="absolute bottom-0 mb-0">
+                  {imageError && (
+                    <div className="text-red-500 text-center">{imageError}</div>
+                  )}
+                </div>
               </div>
 
               <div className="mt-0 flex flex-row gap-4 flex-wrap ml-4">
@@ -158,6 +202,8 @@ export default function AddCategory() {
                   </div>
                 ))}
               </div>
+
+
             </div>
 
             <div className="mt-6 text-xl">Precios</div>
@@ -215,7 +261,10 @@ export default function AddCategory() {
                 rules={{ required: "* Debes seleccionar una opción de stock" }}
                 render={({ field }) => (
                   <RadioGroup
-                    onValueChange={field.onChange}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      handleQuantityChange(value as "ilimitado" | "limitado");
+                    }}
                     value={field.value}
                     className="flex flex-col space-y-2"
                   >
@@ -240,6 +289,7 @@ export default function AddCategory() {
                   }}
                   render={({ field }) => (
                     <Input
+                      disabled={quantityOptions === "ilimitado"}
                       className="bg-[#f0f0f0]"
                       type="text"
                       placeholder="0"
@@ -255,7 +305,27 @@ export default function AddCategory() {
             <div className="mt-6 text-xl">Categorias</div>
             <div className="mt-3 p-4 bg-white rounded-xl">
               <div className="mb-2">Nombre del artículo</div>
-
+              <Controller
+                name="categories"
+                control={control}
+                rules={{
+                  required: "* Categoria no puede estar vacío",
+                }}
+                render={({ field }) => (
+                  <Select>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select a fruit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Fruits</SelectLabel>
+                        <SelectItem value="apple">Apple</SelectItem>
+                        <SelectItem value="banana">Banana</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
 
             <div className="mt-6 text-xl">Colores</div>
