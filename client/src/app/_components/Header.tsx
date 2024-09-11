@@ -10,7 +10,7 @@ import { RootState, useAppSelector } from "@/store/store";
 import Select from "@/app/_components/select";
 
 const getSelectOptions = (user: any) => {
-  if (user.role === "User") {
+  if (user.role === "Admin") {
     return ["Administrar", "Cerrar sesión"];
   }
   return ["Cerrar sesión"];

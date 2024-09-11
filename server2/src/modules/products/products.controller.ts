@@ -54,4 +54,9 @@ export class ProductsController {
   ) {
     return this.productsService.addProduct(addProductDto);
   }
+
+  @Get('/categories/category/:id')
+  getCategory(@Param('id') id: number) {
+    return this.productsService.findCategory(id);
+  }
 }

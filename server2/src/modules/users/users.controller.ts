@@ -113,7 +113,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthenticationGuard)
-  @Get('/verify-role')
+  @Get('/isadmin')
   async veryfyRole(@CurrentUser() currentUser: UserEntity) {
     return currentUser.roles;
   }

@@ -26,16 +26,26 @@ function SignUpForm() {
     mode: "onChange",
   });
 
+  interface ServerErrors {
+    email?: string;
+    password?: string;
+    password_confirmation?: string;
+    [key: string]: string | undefined;
+  }
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       await signUp(data.email, data.password, data.password_confirmation);
       router.push("/");
-    } catch (error) {
+    } catch (error: any) {
       if (error.response && error.response.data.errors) {
-        const serverErrors = error.response.data.errors;
+        const serverErrors: ServerErrors = error.response.data.errors;
+
+        const allowedFields = ["email", "password", "password_confirmation"] as const;
+
         for (const [field, message] of Object.entries(serverErrors)) {
-          if (field) {
-            setError(field, {
+          if (allowedFields.includes(field as typeof allowedFields[number])) {
+            setError(field as "email" | "password" | "password_confirmation", {
               type: "manual",
               message: message || "",
             });
@@ -51,9 +61,9 @@ function SignUpForm() {
     <React.Fragment>
       <div
         className={`
-max-w-[418px] mx-auto mb-4
-font-bold text-[50px] leading-[68px]
-text-center lg:text-left`}
+      max-w-[418px] mx-auto mb-4
+      font-bold text-[50px] leading-[68px]
+      text-center lg:text-left`}
       >
         <div className="lg:text-left max-w-[418px] hidden lg:block">
           Registrarse
