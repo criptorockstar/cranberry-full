@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, UserRound } from "lucide-react";
+import { UserRound } from "lucide-react";
 import { RootState, useAppSelector, useAppDispatch } from "@/store/store";
 import { clearUserState } from "@/store/slices/userSlice"
 import Cookies from "js-cookie";
@@ -44,7 +44,7 @@ export default function Header() {
           size="icon"
           className="flex sm:hidden ml-5 bg-[#f0f0f0] rounded-full hover:bg-[transparent]"
         >
-          <ShoppingBag size={40} className="text-gray-900" />
+          <img src="/shopping_bag.svg" width={40} height={40} className="text-gray-900" />
         </Button>
 
         <div className="flex items-center gap-8">
@@ -54,9 +54,9 @@ export default function Header() {
         <Button
           onClick={() => router.push("/iniciar-sesion")}
           size="icon"
-          className="flex sm:hidden mr-5 bg-[#f0f0f0] rounded-full hover:bg-[transparent]"
+          className="flex sm:hidden mr-5 bg-[#f0f0f0] rounded-full hover:bg-[transparent] bg-[transparent]"
         >
-          <UserRound size={40} className="text-gray-900" />
+          <UserRound size={40} className="text-gray-900  hover:bg-[transparent] bg-[transparent]" />
         </Button>
 
         <ul className="items-center gap-8 font-weight-500 hidden sm:flex">
@@ -77,7 +77,7 @@ export default function Header() {
             size="icon"
             className="bg-[#f0f0f0] rounded-full hover:bg-[transparent]"
           >
-            <ShoppingBag size={30} className="text-gray-900" />
+            <img src="/shopping_bag.svg" width={40} height={40} className="text-gray-900" />
           </Button>
 
           {!user.email ? (

@@ -29,6 +29,7 @@ export default function DashboardTable() {
           slug: item.slug,
           description: item.description,
           stock: item.stock,
+          quantity: item.quantity,
           price: item.price,
           offer: item.offer,
           featured: item.featured,

@@ -27,18 +27,7 @@ export class CategorySeeder implements OnModuleInit {
       return;
     }
 
-    const categories = [
-      'Vestidos',
-      'Faldas',
-      'Blusas',
-      'Camisas',
-      'Chaquetas',
-      'Abrigos',
-      'Pantalones',
-      'Leggings',
-      'Jerséis',
-      'Chaquetas de punto',
-    ].map((name) => ({
+    const categories = ['Conjuntos', 'Remeras', 'Buzos'].map((name) => ({
       name,
       slug: this.slugify(name),
       image: `${this.apiUrl}/files/${this.slugify(name)}.png`,
