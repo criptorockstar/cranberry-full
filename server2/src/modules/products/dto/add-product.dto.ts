@@ -1,3 +1,10 @@
+// Define a specific type for the category items in the DTO
+export interface CategoryDto {
+  value: string;
+  label: string;
+}
+
+// Update AddProductDto to use the CategoryDto type
 import {
   IsNotEmpty,
   IsString,
@@ -19,7 +26,7 @@ export class AddProductDto {
   @ArrayNotEmpty({
     message: 'categories: Debe ingresar al menos una categoría',
   })
-  categories: { value: string; label: string }[];
+  categories: CategoryDto[];
 
   @IsNotEmpty({ message: 'quantity: Debe ingresar una cantidad' })
   @IsString({ message: 'quantity: Debe ser una cadena de texto' })

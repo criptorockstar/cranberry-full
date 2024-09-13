@@ -41,7 +41,7 @@ export type Product = {
   description: string;
   stock: number;
   price: number;
-  discount: number;
+  offer: number;
   featured: boolean;
   createdAt: string;
   updatedAt: string;
@@ -73,7 +73,7 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ getValue }) => `$${getValue<number>()}`,
   },
   {
-    accessorKey: "discount",
+    accessorKey: "offer",
     header: "Oferta",
     cell: ({ getValue }) => `$${getValue<number>()}`,
   },

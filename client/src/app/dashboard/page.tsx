@@ -30,7 +30,7 @@ export default function DashboardTable() {
           description: item.description,
           stock: item.stock,
           price: item.price,
-          discount: item.discount,
+          offer: item.offer,
           featured: item.featured,
           createdAt: item.createdAt,
           updatedAt: item.updatedAt,

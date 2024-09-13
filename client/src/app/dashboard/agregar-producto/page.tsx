@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -39,6 +39,8 @@ export default function AddProduct() {
   const { getColors } = useColors();
   const { getSizes } = useSizes();
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const dispatch = useAppDispatch();
   const { getCategories } = useCategories();
   const categories = useAppSelector((state) => state.categories.categories);
@@ -46,11 +48,14 @@ export default function AddProduct() {
   const sizes = useAppSelector((state) => state.sizes.sizes);
 
   const [images, setImages] = useState<File[]>([]);
-  const [imageObject, setImageObject] = useState<any[]>([]);
+  const [imageObject, setImageObject] = useState<string[]>([]); // Cambia 'any' a 'string[]'
   const [imageError, setImageError] = useState<string | null>(null);
+  const [colorError, setColorError] = useState<string | null>(null);
+  const [sizeError, setSizeError] = useState<string | null>(null);
   const [quantityOptions, setQuantityOptions] = useState("ilimitado");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+
 
   React.useEffect(() => {
     getCategoryList();
@@ -77,6 +82,7 @@ export default function AddProduct() {
         ? [...prevColors, selectedColor]
         : prevColors.filter(c => c !== selectedColor)
     );
+    setColorError(null);
   };
 
   const handleSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,6 +92,7 @@ export default function AddProduct() {
         ? [...prevSizes, selectedSize]
         : prevSizes.filter(s => s !== selectedSize)
     );
+    setSizeError(null);
   };
 
 
@@ -119,6 +126,7 @@ export default function AddProduct() {
     setError,
     clearErrors,
     register,
+    setValue,
   } = useForm<AddProductFormValues>({
     defaultValues: {
       name: "",
@@ -135,9 +143,36 @@ export default function AddProduct() {
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<AddProductFormValues> = async data => {
-    if (images.length === 0) {
+
+  const validateImages = () => {
+    // Suponiendo que 'images' es parte del estado o una variable
+    if (images.length == 0) {
       setImageError("Debes subir al menos una imagen");
+      // Enfocar el input cuando no hay imágenes
+      if (fileInputRef.current) {
+        fileInputRef.current.focus();
+      }
+      return;
+    }
+    setImageError('');
+  };
+
+
+  const onSubmit: SubmitHandler<AddProductFormValues> = async data => {
+    validateImages();
+
+    if (imageError) {
+      return; // Detener el envío si hay un error
+    }
+
+    if (selectedColors.length == 0) {
+      setColorError("* Debes seleccionar al menos un color");
+      console.log("empty colors")
+      return;
+    }
+
+    if (selectedSizes.length == 0) {
+      setSizeError("* Debes seleccionar al menos un talle");
       return;
     }
 
@@ -150,15 +185,27 @@ export default function AddProduct() {
       quantity: data.quantity,
       categories: data.categories,
       colors: selectedColors,
-      images: images,
+      images: [...imageObject],
       sizes: selectedSizes
     }
 
     try {
       const response = await createProduct(formdata);
       console.log(response);
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    } catch (error: any) {
+      if (error.response && error.response.data.errors) {
+        const serverErrors = error.response.data.errors as Record<string, string>;
+        for (const [field, message] of Object.entries(serverErrors)) {
+          if (field) {
+            setError(field as keyof AddProductFormValues, {
+              type: "manual",
+              message: message || "",
+            });
+          }
+        }
+      } else {
+        console.error("Ocurrió un error inesperado:", error);
+      }
     }
   };
 
@@ -166,16 +213,27 @@ export default function AddProduct() {
     if (e.target.files) {
       const files = Array.from(e.target.files);
 
-      const imgResponses = await Promise.all(files.map(file => uploadImage(file)));
-      console.log(imgResponses);
-
       if (images.length + files.length > 4) {
         setImageError("Puedes subir un máximo de 4 imágenes.");
         return;
       }
       setImageError(null);
       setImages(prevImages => [...prevImages, ...files].slice(0, 4));  // Máximo 4 imágenes
+
+      // Subir imágenes y extraer las URLs
+      const imgResponses = await Promise.all(files.map(file => uploadImage(file)));
+      const imageUrls = imgResponses.map(response => response.imageUrl);
+
+      // Acumular las nuevas URLs en el estado de imageObject
+      setImageObject(prev => [...prev, ...imageUrls]); // Añadir sin reemplazar
+
+      console.log("Estado completo de URLs:", [...imageObject]);
     }
+  };
+
+  const handleDeleteImage = (index: number) => {
+    setImages(prevImages => prevImages.filter((_, i) => i !== index));  // Eliminar la imagen del estado de imágenes
+    setImageObject(prevObjects => prevObjects.filter((_, i) => i !== index));  // Eliminar la URL correspondiente
   };
 
   const handleQuantityChange = (value: "ilimitado" | "limitado") => {
@@ -234,6 +292,7 @@ export default function AddProduct() {
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   multiple
                   onChange={handleImageUpload}
+                  ref={fileInputRef}
                 />
                 <CirclePlus size={48} className="text-gray-500" />
 
@@ -258,15 +317,13 @@ export default function AddProduct() {
                       size="icon"
                       className="rounded-full absolute inset-0 m-auto bg-white text-red-500"
                       style={{ height: "40px", width: "40px" }}
-                      onClick={() => setImages(images.filter((_, i) => i !== index))}
+                      onClick={() => handleDeleteImage(index)}
                     >
                       <Trash2 />
                     </Button>
                   </div>
                 ))}
               </div>
-
-
             </div>
 
             <div className="mt-6 text-xl">Precios</div>
@@ -413,6 +470,7 @@ export default function AddProduct() {
                   </div>
                 ))}
               </div>
+              {colorError && <p className="text-red-500 mt-[-10px] text-xs">{colorError}</p>}
             </div>
 
             <div className="mt-6 text-xl">Talles</div>
@@ -440,6 +498,7 @@ export default function AddProduct() {
                   ))}
                 </div>
               </div>
+              {sizeError && <p className="text-red-500 mt-[-10px] text-xs">{sizeError}</p>}
             </div>
           </div>
 

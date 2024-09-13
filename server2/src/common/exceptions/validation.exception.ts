@@ -3,9 +3,10 @@ import {
   Catch,
   ArgumentsHost,
   HttpException,
+  ConflictException,
 } from '@nestjs/common';
 
-@Catch(HttpException)
+@Catch(HttpException, ConflictException)
 export class ValidationException implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -25,8 +26,11 @@ export class ValidationException implements ExceptionFilter {
         // handle exceptions
         formattedErrors = this.formatServiceErrors(exceptionResponse.message);
       }
+    } else if (status === 409) {
+      // handle ConflictException
+      formattedErrors = this.formatConflictErrors(exceptionResponse.message);
     } else {
-      // another exceptions
+      // other exceptions
       formattedErrors = { error: exceptionResponse.message };
     }
 
@@ -59,6 +63,22 @@ export class ValidationException implements ExceptionFilter {
       const field = parts[0].trim();
       const errorMsg = parts[1].trim();
       errorMap[field] = errorMsg;
+    }
+
+    return errorMap;
+  }
+
+  private formatConflictErrors(message: string): Record<string, string> {
+    const errorMap: Record<string, string> = {};
+
+    // Handle specific format for ConflictException
+    const parts = message.split(':');
+    if (parts.length === 2) {
+      const field = parts[0].trim();
+      const errorMsg = parts[1].trim();
+      errorMap[field] = errorMsg;
+    } else {
+      errorMap['conflict'] = message;
     }
 
     return errorMap;

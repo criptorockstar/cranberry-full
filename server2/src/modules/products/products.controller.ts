@@ -36,9 +36,9 @@ export class ProductsController {
     return this.productsService.findAllFeatured();
   }
 
-  @Get('/product/:slug')
-  findBySlug(@Param('slug') slug: string) {
-    return this.productsService.findProduct(slug);
+  @Get('/product/:id')
+  findBySlug(@Param('id') id: number) {
+    return this.productsService.findProduct(id);
   }
 
   @Get('/categories/')

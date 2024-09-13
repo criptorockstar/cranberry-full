@@ -63,6 +63,20 @@ const useAdmin = () => {
     }
   };
 
+  const updateProduct = async (id: number, data: any) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.put(`/products/product/${id}`, data);
+      return response;
+    } catch (err: any) {
+      setError(err.response?.data?.message || "An error occurred");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const createProduct = async (data: any) => {
     setLoading(true);
     setError(null);
@@ -72,7 +86,7 @@ const useAdmin = () => {
       return response.data;
     } catch (err: any) {
       setError("Error al crear el producto");
-      console.log(err.response.data);
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -109,6 +123,7 @@ const useAdmin = () => {
     updateCategory,
     createProduct,
     uploadImage,
+    updateProduct,
     loading,
     error,
   };

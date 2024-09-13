@@ -37,10 +37,10 @@ export class ProductsService {
     });
   }
 
-  async findProduct(slug: string) {
+  async findProduct(id: number) {
     return this.productRepository.findOne({
-      where: { slug: slug },
-      relations: ['images'],
+      where: { id: id },
+      relations: ['images', 'colors', 'sizes', 'categories'],
     });
   }
 
@@ -73,28 +73,73 @@ export class ProductsService {
   }
 
   async addProduct(addProductDto: AddProductDto) {
-    console.log('Received AddProductDto:', addProductDto);
     const existingProduct = await this.productRepository.findOne({
       where: { name: addProductDto.name },
     });
 
     if (existingProduct) {
       throw new ConflictException(
-        `Product with name "${addProductDto.name}" already exists`,
+        'name: * Ya existe un producto con ese nombre',
       );
     }
 
+    // Retrieve all entities to map from
     const colors = await this.colorRepository.find();
     const sizes = await this.sizeRepository.find();
     const categories = await this.categoryRepository.find();
 
     if (colors.length === 0 || sizes.length === 0 || categories.length === 0) {
       throw new ConflictException(
-        `no hay suficientes datos para crear el producto`,
+        `No hay suficientes datos para crear el producto`,
       );
     }
 
-    const newProduct = {
+    // Map category values to actual category entities
+    const categoryEntities = addProductDto.categories.map((categoryDto) => {
+      const category = categories.find(
+        (cat) => cat.id === parseInt(categoryDto.value),
+      );
+      if (!category) {
+        throw new ConflictException(
+          `Category with ID "${categoryDto.value}" not found`,
+        );
+      }
+      return category;
+    });
+
+    // Map color values to actual color entities
+    const colorEntities = addProductDto.colors.map((colorName) => {
+      const color = colors.find(
+        (c) => c.name.toLowerCase() === colorName.toLowerCase(),
+      );
+      if (!color) {
+        throw new ConflictException(`Color with name "${colorName}" not found`);
+      }
+      return color;
+    });
+
+    // Map size values to actual size entities
+    const sizeEntities = addProductDto.sizes.map((sizeName) => {
+      const size = sizes.find(
+        (s) => s.name.toLowerCase() === sizeName.toLowerCase(),
+      );
+      if (!size) {
+        throw new ConflictException(`Size with name "${sizeName}" not found`);
+      }
+      return size;
+    });
+
+    // Map image URLs to ProductImage entities
+    const imageEntities = await Promise.all(
+      addProductDto.images.map(async (url: string) => {
+        const image = this.productImageRepository.create({ url });
+        await this.productImageRepository.save(image);
+        return image;
+      }),
+    );
+
+    // Create and save the new product
+    const newProduct = this.productRepository.create({
       name: addProductDto.name,
       slug: this.slugify(addProductDto.name),
       description: addProductDto.description,
@@ -105,10 +150,13 @@ export class ProductsService {
         addProductDto.quantity === 'ilimitado'
           ? Quantities.UNLIMITED
           : Quantities.LIMITED,
-      categories: [categories[0], categories[1]],
-      colors: [colors[0], colors[1]],
-      sizes: [sizes[0], sizes[1]],
-    };
+      categories: categoryEntities,
+      colors: colorEntities,
+      sizes: sizeEntities,
+      images: imageEntities,
+    });
+
+    await this.productRepository.save(newProduct);
 
     return newProduct;
   }
@@ -118,7 +166,6 @@ export class ProductsService {
       throw new Error('File not provided');
     }
 
-    console.log(file);
     // Asegúrate de que el archivo se ha subido correctamente
     const filePath = `http://localhost:5001/files/${file.filename}`;
 
