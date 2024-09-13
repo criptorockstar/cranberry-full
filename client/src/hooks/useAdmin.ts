@@ -78,7 +78,10 @@ const useAdmin = () => {
     }
   };
 
-  const uploadImage = async (file: any) => {
+  const uploadImage = async (file: File) => {
+    setLoading(true);
+    setError(null);
+
     const formData = new FormData();
     formData.append("image", file);
 
@@ -89,8 +92,14 @@ const useAdmin = () => {
         },
       });
       console.log(response.data);
-    } catch (error) {
-      console.error("Error uploading file:", error);
+      return response.data; // Return the data if needed
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || "Error uploading file";
+      setError(errorMessage);
+      console.error("Error uploading file:", errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -35,7 +35,7 @@ interface AddProductFormValues {
 
 export default function AddProduct() {
   const router = useRouter();
-  const { createProduct } = useAdmin();
+  const { createProduct, uploadImage } = useAdmin();
   const { getColors } = useColors();
   const { getSizes } = useSizes();
 
@@ -46,6 +46,7 @@ export default function AddProduct() {
   const sizes = useAppSelector((state) => state.sizes.sizes);
 
   const [images, setImages] = useState<File[]>([]);
+  const [imageObject, setImageObject] = useState<any[]>([]);
   const [imageError, setImageError] = useState<string | null>(null);
   const [quantityOptions, setQuantityOptions] = useState("ilimitado");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
@@ -161,9 +162,13 @@ export default function AddProduct() {
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
+
+      const imgResponses = await Promise.all(files.map(file => uploadImage(file)));
+      console.log(imgResponses);
+
       if (images.length + files.length > 4) {
         setImageError("Puedes subir un máximo de 4 imágenes.");
         return;

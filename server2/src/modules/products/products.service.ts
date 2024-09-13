@@ -110,12 +110,7 @@ export class ProductsService {
       sizes: [sizes[0], sizes[1]],
     };
 
-    addProductDto.images.forEach((image) => {
-      console.log(image);
-    });
-    const images = addProductDto.images.map(async (image) => {});
-
-    //newProduct.categories = categories;
+    return newProduct;
   }
 
   async uploadImage(file: Express.Multer.File): Promise<string> {
