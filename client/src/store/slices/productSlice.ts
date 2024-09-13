@@ -32,6 +32,7 @@ export interface Product {
   stock: number;
   price: number;
   offer: number;
+  quantity: string;
   featured: boolean;
   createdAt: string;
   updatedAt: string;
