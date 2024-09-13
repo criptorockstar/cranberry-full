@@ -2,28 +2,27 @@
 
 import React from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import useAuth from "@/hooks/auth";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { Input } from "@/components/input";
-import { Save, Trash2, Star } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea"
+import { Save, Trash2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import useAdmin from "@/hooks/useAdmin"
+import { useRouter } from "next/navigation";
 
-interface addProductFormValues {
+interface addCategoryFormValues {
   name: string;
   description: string;
 }
 
 export default function AddCategory() {
   const router = useRouter();
+  const { createCategory } = useAdmin();
   const {
     control,
     handleSubmit,
     formState: { errors: formErrors },
-    setError,
-  } = useForm<addProductFormValues>({
+    reset,
+  } = useForm<addCategoryFormValues>({
     defaultValues: {
       name: "",
       description: "",
@@ -31,8 +30,21 @@ export default function AddCategory() {
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<addProductFormValues> = data => {
-    console.log(data);
+  const onSubmit: SubmitHandler<addCategoryFormValues> = async (data) => {
+    try {
+      await createCategory(data.name);
+      router.push("/dashboard/categorias")
+    } catch (error: any) {
+      console.log(error.response.data)
+    }
+  };
+
+  // Función para limpiar los inputs
+  const clearForm = () => {
+    reset({
+      name: "",
+      description: "",
+    });
   };
 
   return (
@@ -41,15 +53,20 @@ export default function AddCategory() {
         <div className="flex flex-row justify-between">
           <div>
             <div className="font-semibold text-2xl">Categorias</div>
-            <p>Crea categorías para organizar tus productos y tener un mejor control de lo que vendes.</p>
+            <p>
+              Crea categorías para organizar tus productos y tener un mejor
+              control de lo que vendes.
+            </p>
           </div>
 
           <div className="flex flex-row space-x-2">
-            <Button size="icon">
+            {/* Botón para limpiar el formulario */}
+            <Button size="icon" onClick={clearForm}>
               <Trash2 />
             </Button>
 
-            <Button className="">
+            {/* Botón para guardar el formulario */}
+            <Button className="" onClick={handleSubmit(onSubmit)}>
               <Save />
               <span className="ml-1">Guardar</span>
             </Button>
@@ -70,7 +87,7 @@ export default function AddCategory() {
                 render={({ field }) => (
                   <Input
                     className="bg-[#f0f0f0]"
-                    type="email"
+                    type="text"
                     placeholder="Articulo"
                     error={formErrors.name ? formErrors.name.message : ""}
                     {...field}
@@ -92,12 +109,9 @@ export default function AddCategory() {
                 )}
               />
             </div>
-
           </div>
         </div>
       </div>
     </React.Fragment>
-
   );
 }
-

@@ -15,8 +15,15 @@ export class AddProductDto {
   @IsString({ message: 'description: Debe ser una cadena de texto' })
   description: string;
 
-  @IsNotEmpty({ message: 'category: Debe ingresar una categoría' })
-  category: number;
+  @IsArray({ message: 'categories: Debe ingresar una o más categorías' })
+  @ArrayNotEmpty({
+    message: 'categories: Debe ingresar al menos una categoría',
+  })
+  categories: { value: string; label: string }[];
+
+  @IsNotEmpty({ message: 'quantity: Debe ingresar una cantidad' })
+  @IsString({ message: 'quantity: Debe ser una cadena de texto' })
+  quantity: string;
 
   @IsNotEmpty({ message: 'stock: Debe ingresar el stock' })
   @IsNumber({}, { message: 'stock: Debe ser un número' })
@@ -26,9 +33,12 @@ export class AddProductDto {
   @IsNumber({}, { message: 'price: Debe ser un número' })
   price: number;
 
-  @IsNotEmpty({ message: 'discount: Debe ingresar el descuento' })
-  @IsNumber({}, { message: 'discount: Debe ser un número' })
-  discount: number;
+  @IsNotEmpty({ message: 'offer: Debe ingresar la oferta' })
+  @IsNumber({}, { message: 'offer: Debe ser un número' })
+  offer: number;
+
+  @IsArray()
+  images: any;
 
   @IsArray({ message: 'colors: Debe ser una lista de colores' })
   @ArrayNotEmpty({ message: 'colors: Debe ingresar al menos un color' })

@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  Injectable,
   UnauthorizedException,
   mixin,
 } from '@nestjs/common';
@@ -9,12 +10,13 @@ export const AuthorizeGuard = (allowedRoles: string[]) => {
   class RolesGuardMixin implements CanActivate {
     canActivate(context: ExecutionContext): boolean {
       const req = context.switchToHttp().getRequest();
+      const userRoles = req.currentUser?.roles;
 
-      const result = req.currentUser?.roles
-        .map((role: string) => allowedRoles.includes(role))
-        .find((val: boolean) => val === true);
+      // Check if userRoles is a single role, not an array
+      if (userRoles && allowedRoles.includes(userRoles)) {
+        return true;
+      }
 
-      if (result) return true;
       throw new UnauthorizedException('No estás autorizado');
     }
   }

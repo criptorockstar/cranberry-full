@@ -8,7 +8,6 @@ import { SidebarItem } from "./_components/Sidebar";
 import { Tag, Globe, LayoutDashboard, NotepadText } from "lucide-react";
 import { useRouter } from "next/navigation"
 
-
 export default function AdminLayout({ children }: any) {
   const isActive = (basePath: string) => {
     return pathname === basePath || pathname.startsWith(basePath + "/");

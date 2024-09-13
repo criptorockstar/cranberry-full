@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import { FilePenLine, Trash2 } from "lucide-react";
-import useCategories from "@/hooks/useCategories";
+import useAdmin from "@/hooks/useAdmin";
 import { useRouter } from "next/navigation";
 import { deleteCategory as deleteCategoryFromSlice } from "@/store/slices/categorySlice";
 import { useAppDispatch } from "@/store/store";
@@ -37,7 +37,7 @@ export const columns: ColumnDef<Category>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const { deleteCategory } = useCategories();
+      const { deleteCategory } = useAdmin();
       const router = useRouter();
       const dispatch = useAppDispatch();
       const category = row.original;

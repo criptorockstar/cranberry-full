@@ -54,7 +54,7 @@ export class UsersController {
   @Post('/sign-in')
   async signin(@Body() loginUserDto: AuthenticateUserDto): Promise<{
     email: string;
-    role: string;
+    role: any;
     accessToken: string;
     refreshToken: string;
   }> {
@@ -109,10 +109,19 @@ export class UsersController {
   @UseGuards(AuthenticationGuard)
   @Get('/verify-token')
   async veryfyToken(@CurrentUser() currentUser: UserEntity) {
-    return currentUser;
+    return { isValid: !!currentUser };
   }
 
   @UseGuards(AuthenticationGuard)
+  @Get('/logout')
+  async logout(@CurrentUser() currentUser: UserEntity) {
+    return {
+      logout: true,
+    };
+  }
+
+  @UseGuards(AuthenticationGuard)
+  @UseGuards(AuthorizeGuard(['Admin']))
   @Get('/isadmin')
   async veryfyRole(@CurrentUser() currentUser: UserEntity) {
     return currentUser.roles;

@@ -15,10 +15,10 @@ const createAxiosInstance = () => {
   instance.interceptors.request.use(
     (config) => {
       if (typeof window !== "undefined") {
-        const access_token = Cookies.get("access_token");
+        const accessToken = Cookies.get("accessToken");
 
-        if (access_token) {
-          config.headers["Authorization"] = `Bearer ${access_token}`;
+        if (accessToken) {
+          config.headers["Authorization"] = `Bearer ${accessToken}`;
         }
       }
 
@@ -33,7 +33,7 @@ const createAxiosInstance = () => {
     (error) => {
       // Si la respuesta es 401 (no autorizado), eliminar los tokens y limpiar el estado del usuario
       if (error.response?.status === 401) {
-        Cookies.remove("access_token");
+        Cookies.remove("accessToken");
 
         // Despachar la acción para limpiar el estado del usuario en Redux
         store.dispatch(clearUserState());

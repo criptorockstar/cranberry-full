@@ -13,6 +13,7 @@ import { Color } from './color.entity';
 import { Size } from './size.entity';
 import { Category } from './category.entity';
 import { ProductImage } from './image.entity';
+import { Quantities } from 'src/common/enums';
 
 @Entity('products')
 export class ProductEntity {
@@ -28,6 +29,13 @@ export class ProductEntity {
   @Column()
   description: string;
 
+  @Column({
+    type: 'enum',
+    enum: Quantities,
+    default: Quantities.UNLIMITED,
+  })
+  quantity: Quantities;
+
   @Column()
   stock: number;
 
@@ -35,7 +43,7 @@ export class ProductEntity {
   price: number;
 
   @Column()
-  discount: number;
+  offer: number;
 
   @Column({ default: false })
   featured: boolean;

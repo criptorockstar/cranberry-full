@@ -8,30 +8,17 @@ import { Input } from "@/components/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Save, Trash2, Star, CirclePlus } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod";
+
+import Select from 'react-select';
 import useCategories from "@/hooks/useCategories";
+import useColors from "@/hooks/useColors";
+import useSizes from "@/hooks/useSizes";
 
 import { setCategories } from "@/store/slices/categorySlice";
+import { setColors } from "@/store/slices/colorSlice";
+import { setSizes } from "@/store/slices/sizeSlice";
 import { useAppDispatch, useAppSelector } from '@/store/store';
+import useAdmin from "@/hooks/useAdmin";
 
 interface AddProductFormValues {
   name: string;
@@ -41,22 +28,33 @@ interface AddProductFormValues {
   offer: number;
   quantity: "ilimitado" | "limitado";
   stock: number;
-  categories: [];
+  categories: { value: string, label: string }[];
+  colors: string[];
+  sizes: string[];
 }
 
-export default function AddCategory() {
+export default function AddProduct() {
   const router = useRouter();
+  const { createProduct } = useAdmin();
+  const { getColors } = useColors();
+  const { getSizes } = useSizes();
 
   const dispatch = useAppDispatch();
   const { getCategories } = useCategories();
   const categories = useAppSelector((state) => state.categories.categories);
+  const colors = useAppSelector((state) => state.colors.colors);
+  const sizes = useAppSelector((state) => state.sizes.sizes);
 
   const [images, setImages] = useState<File[]>([]);
   const [imageError, setImageError] = useState<string | null>(null);
   const [quantityOptions, setQuantityOptions] = useState("ilimitado");
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
 
   React.useEffect(() => {
     getCategoryList();
+    getColorList();
+    getSizeList();
   }, []);
 
   const getCategoryList = () => {
@@ -68,6 +66,48 @@ export default function AddCategory() {
         console.error("Invalid data format:", res.data);
       }
       dispatch(setCategories(res.data));
+    });
+  };
+
+  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedColor = e.target.value;
+    setSelectedColors(prevColors =>
+      e.target.checked
+        ? [...prevColors, selectedColor]
+        : prevColors.filter(c => c !== selectedColor)
+    );
+  };
+
+  const handleSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedSize = e.target.value;
+    setSelectedSizes(prevSizes =>
+      e.target.checked
+        ? [...prevSizes, selectedSize]
+        : prevSizes.filter(s => s !== selectedSize)
+    );
+  };
+
+
+  const getColorList = () => {
+    getColors().then((res) => {
+      console.log("Color list response:", res.data);
+      if (Array.isArray(res.data) && res.data.every(item => 'id' in item && 'name' in item && 'code' in item)) {
+        dispatch(setColors(res.data));
+      } else {
+        console.error("Invalid data format:", res.data);
+      }
+    });
+  };
+
+
+  const getSizeList = () => {
+    getSizes().then((res) => {
+      console.log("Size list response:", res.data);
+      if (Array.isArray(res.data) && res.data.every(item => 'id' in item && 'name' in item)) {
+        dispatch(setSizes(res.data));
+      } else {
+        console.error("Invalid data format:", res.data);
+      }
     });
   };
 
@@ -87,31 +127,49 @@ export default function AddCategory() {
       offer: 0,
       quantity: "ilimitado",
       stock: 0,
+      categories: [],
+      colors: [],
+      sizes: [],
     },
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<AddProductFormValues> = data => {
-    if (images.length == 0) {
+  const onSubmit: SubmitHandler<AddProductFormValues> = async data => {
+    if (images.length === 0) {
       setImageError("Debes subir al menos una imagen");
+      return;
     }
-    console.log(quantityOptions);
-    console.log({ ...data, images });
+
+    const formdata = {
+      name: data.name,
+      description: data.description,
+      price: Number(data.price),
+      offer: data.offer,
+      stock: data.stock,
+      quantity: data.quantity,
+      categories: data.categories,
+      colors: selectedColors,
+      images: images,
+      sizes: selectedSizes
+    }
+
+    try {
+      const response = await createProduct(formdata);
+      console.log(response);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
       if (images.length + files.length > 4) {
-        alert("Puedes subir un máximo de 4 imágenes.");
+        setImageError("Puedes subir un máximo de 4 imágenes.");
         return;
       }
       setImageError(null);
-      setImages(prevImages => {
-        const newImages = [...prevImages, ...files].slice(0, 4); // Máximo 4 imágenes
-        clearErrors("images");
-        return newImages;
-      });
+      setImages(prevImages => [...prevImages, ...files].slice(0, 4));  // Máximo 4 imágenes
     }
   };
 
@@ -254,7 +312,7 @@ export default function AddCategory() {
             </div>
 
             <div className="mt-6 text-xl">Stock</div>
-            <div className="mt-3 p-8 bg-white rounded-xl flex flex-row">
+            <div className="mt-3 p-8 pt-11  bg-white rounded-xl flex flex-row">
               <Controller
                 name="quantity"
                 control={control}
@@ -303,8 +361,7 @@ export default function AddCategory() {
             </div>
 
             <div className="mt-6 text-xl">Categorias</div>
-            <div className="mt-3 p-4 bg-white rounded-xl">
-              <div className="mb-2">Nombre del artículo</div>
+            <div className="mt-3 p-4 pt-7 bg-white rounded-xl">
               <Controller
                 name="categories"
                 control={control}
@@ -312,32 +369,72 @@ export default function AddCategory() {
                   required: "* Categoria no puede estar vacío",
                 }}
                 render={({ field }) => (
-                  <Select>
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select a fruit" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Fruits</SelectLabel>
-                        <SelectItem value="apple">Apple</SelectItem>
-                        <SelectItem value="banana">Banana</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+                  <Select
+                    {...field}
+                    isMulti
+                    options={categories.map(category => ({ value: String(category.id), label: category.name }))}
+                    classNamePrefix="react-select"
+                    placeholder="Selecciona categorías"
+                    onChange={(selectedOptions) => {
+                      field.onChange(selectedOptions);
+                    }}
+                    value={categories
+                      .filter(category =>
+                        field.value?.map(v => String(v.value)).includes(String(category.id))
+                      )
+                      .map(category => ({ value: String(category.id), label: category.name }))}
+                  />
                 )}
               />
+              <div className="mb-3"></div>
             </div>
 
             <div className="mt-6 text-xl">Colores</div>
-            <div className="mt-3 p-4 bg-white rounded-xl">
-              <div className="mb-2">Nombre del artículo</div>
-
+            <div className="mt-4 p-4 pt-8 bg-white rounded-xl">
+              <div className="flex flex-row flex-wrap">
+                {colors.map((color) => (
+                  <div key={color.id} className="flex flex-col items-center mb-4 mx-2">
+                    <div
+                      className="w-[40px] h-[40px] rounded-none"
+                      style={{ backgroundColor: color.code }}
+                    ></div>
+                    <div className="p-1"></div>
+                    <input
+                      type="checkbox"
+                      id={`color-${color.id}`}
+                      value={color.name}
+                      onChange={handleColorChange}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="mt-6 text-xl">Talles</div>
-            <div className="mt-3 p-4 bg-white rounded-xl">
-              <div className="mb-2">Nombre del artículo</div>
+            <div className="mt-4 p-4 pt-8 bg-white rounded-xl">
+              <div className="flex flex-row flex-wrap">
+                <div className="flex flex-row flex-wrap">
+                  {sizes.map((size) => (
+                    <div key={size.id} className="flex flex-col items-center mb-4 mx-2">
+                      <div
+                        className="w-[40px] h-[40px] rounded-none bg-[black] text-white"
+                      >
+                        <div className="flex items-center justify-center h-full">
+                          {size.name}
+                        </div>
+                      </div>
 
+                      <div className="p-1"></div>
+                      <input
+                        type="checkbox"
+                        id={`color-${size.id}`}
+                        value={size.name}
+                        onChange={handleSizeChange}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 

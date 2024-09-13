@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useAxiosInstance } from "./axios-config";
+import { createAxiosInstance } from "./axios-config";
 import { useAppDispatch } from "@/store/store";
 import { setUserState } from "@/store/slices/userSlice";
+import Cookies from "js-cookie"; // Importar js-cookie
 
-const axios = useAxiosInstance();
+const axios = createAxiosInstance();
 
 const useAuth = () => {
   const [loading, setLoading] = useState(false);
@@ -18,8 +19,8 @@ const useAuth = () => {
 
     try {
       const response = await axios.post("/users/sign-in", { email, password });
-      const access_token = response.data.access_token;
-      const refresh_token = response.data.refresh_token;
+      const accessToken = response.data.accessToken;
+      const refreshToken = response.data.refreshToken;
 
       const userState = {
         email: response.data.email,
@@ -28,10 +29,12 @@ const useAuth = () => {
 
       dispatch(setUserState(userState));
 
-      localStorage.setItem("access_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
+      // Guardar los tokens en cookies
+      Cookies.set("accessToken", accessToken, { expires: 7 }); // Cookies que expiran en 7 días
+      Cookies.set("refreshToken", refreshToken, { expires: 30 }); // Expira en 30 días
 
-      axios.defaults.headers["Authorization"] = `Bearer ${access_token}`;
+      // Establecer el header Authorization con el token de acceso
+      axios.defaults.headers["Authorization"] = `Bearer ${accessToken}`;
 
       return response;
     } catch (err: any) {
@@ -56,8 +59,8 @@ const useAuth = () => {
         password,
         password_confirmation,
       });
-      const access_token = response.data.access_token;
-      const refresh_token = response.data.refresh_token;
+      const accessToken = response.data.accessToken;
+      const refreshToken = response.data.refreshToken;
 
       const userState = {
         email: response.data.email,
@@ -66,10 +69,11 @@ const useAuth = () => {
 
       dispatch(setUserState(userState));
 
-      localStorage.setItem("access_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
+      // Guardar los tokens en cookies
+      Cookies.set("accessToken", accessToken, { expires: 7 });
+      Cookies.set("refreshToken", refreshToken, { expires: 30 });
 
-      axios.defaults.headers["Authorization"] = `Bearer ${access_token}`;
+      axios.defaults.headers["Authorization"] = `Bearer ${accessToken}`;
 
       return response;
     } catch (err: any) {

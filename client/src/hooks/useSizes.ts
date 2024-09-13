@@ -3,15 +3,15 @@ import { useAxiosInstance } from "./axios-config";
 
 const axios = useAxiosInstance();
 
-const useCategories = () => {
+const useSizes = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const getCategories = async () => {
+  const getSizes = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get("/products/categories");
+      const response = await axios.get("/products/sizes");
       return response;
     } catch (err: any) {
       setError(err.response?.data?.message || "An error occurred");
@@ -21,11 +21,11 @@ const useCategories = () => {
     }
   };
 
-  const getCategory = async (id: number) => {
+  const getSize = async (id: number) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`/products/categories/category/${id}`);
+      const response = await axios.get(`/products/sizes/size/${id}`);
       return response;
     } catch (err: any) {
       setError(err.response?.data?.message || "An error occurred");
@@ -36,11 +36,11 @@ const useCategories = () => {
   };
 
   return {
-    getCategories,
-    getCategory,
+    getSizes,
+    getSize,
     loading,
     error,
   };
 };
 
-export default useCategories;
+export default useSizes;

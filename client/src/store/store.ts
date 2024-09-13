@@ -6,6 +6,8 @@ import { userReducer } from "@/store/slices/userSlice";
 import { categoryReducer } from "@/store/slices/categorySlice";
 import { productReducer } from "./slices/productSlice";
 import { orderReducer } from "./slices/orderSlice";
+import { colorReducer } from "./slices/colorSlice";
+import { sizeReducer } from "./slices/sizeSlice";
 
 const createNoopStorage = () => {
   return {
@@ -39,6 +41,8 @@ const rootReducer = combineReducers({
   categories: categoryReducer,
   products: productReducer,
   orders: orderReducer,
+  colors: colorReducer,
+  sizes: sizeReducer,
 });
 
 export const store = configureStore({

@@ -6,6 +6,7 @@ import { Color } from '../../src/modules/products/entities/color.entity';
 import { Size } from '../../src/modules/products/entities/size.entity';
 import { Category } from '../../src/modules/products/entities/category.entity';
 import { ProductImage } from '../../src/modules/products/entities/image.entity';
+import { Quantities } from 'src/common/enums';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -56,8 +57,9 @@ export class ProductSeeder implements OnModuleInit {
         slug: this.slugify('Vestido de verano'),
         description: 'Un hermoso vestido de verano.',
         stock: 50,
+        quantity: Quantities.LIMITED, // Usando el enum Quantities
         price: 29.99,
-        discount: 5,
+        offer: 5,
         colors: [colors[0], colors[1]],
         sizes: [sizes[0], sizes[1]],
         categories: [categories[0], categories[1]],
@@ -65,14 +67,16 @@ export class ProductSeeder implements OnModuleInit {
           `${this.apiUrl}/files/vestido-de-verano-1.jpg`,
           `${this.apiUrl}/files/vestido-de-verano-2.jpg`,
         ],
+        featured: false,
       },
       {
         name: 'Camisa de cuadros',
         slug: this.slugify('Camisa de cuadros'),
         description: 'Camisa de cuadros elegante.',
         stock: 100,
+        quantity: Quantities.LIMITED, // Usando el enum Quantities
         price: 19.99,
-        discount: 10,
+        offer: 10,
         colors: [colors[2], colors[3]],
         sizes: [sizes[2], sizes[3]],
         categories: [categories[2], categories[3]],
@@ -80,66 +84,20 @@ export class ProductSeeder implements OnModuleInit {
           `${this.apiUrl}/files/camisa-de-cuadros-1.jpg`,
           `${this.apiUrl}/files/camisa-de-cuadros-2.jpg`,
         ],
+        featured: false,
       },
       {
         name: 'Chaqueta de cuero',
         slug: this.slugify('Chaqueta de cuero'),
         description: 'Chaqueta de cuero de alta calidad.',
         stock: 30,
+        quantity: Quantities.LIMITED, // Usando el enum Quantities
         price: 99.99,
-        discount: 15,
+        offer: 15,
         colors: [colors[4]],
         sizes: [sizes[0]],
         categories: [categories[4]],
         images: [`${this.apiUrl}/files/chaqueta-de-cuero-1.jpg`],
-        featured: true,
-      },
-      {
-        name: 'Abrigo de lana',
-        slug: this.slugify('Abrigo de lana'),
-        description: 'Abrigo de lana cálido y cómodo.',
-        stock: 20,
-        price: 129.99,
-        discount: 20,
-        colors: [colors[5]],
-        sizes: [sizes[1]],
-        categories: [categories[5]],
-        images: [
-          `${this.apiUrl}/files/abrigo-de-lana-1.jpg`,
-          `${this.apiUrl}/files/abrigo-de-lana-2.jpg`,
-        ],
-        featured: true,
-      },
-      {
-        name: 'Pantalones deportivos',
-        slug: this.slugify('Pantalones deportivos'),
-        description: 'Pantalones deportivos para entrenamiento.',
-        stock: 60,
-        price: 39.99,
-        discount: 10,
-        colors: [colors[6]],
-        sizes: [sizes[2]],
-        categories: [categories[6]],
-        images: [
-          `${this.apiUrl}/files/vestido-de-verano-2.jpg`,
-          `${this.apiUrl}/files/vestido-de-verano-2.jpg`,
-        ],
-        featured: true,
-      },
-      {
-        name: 'Jersey de lana',
-        slug: this.slugify('Jersey de lana'),
-        description: 'Jersey de lana suave y cálido.',
-        stock: 40,
-        price: 49.99,
-        discount: 5,
-        colors: [colors[7]],
-        sizes: [sizes[3]],
-        categories: [categories[7]],
-        images: [
-          `${this.apiUrl}/files/jersey-de-lana-1.jpg`,
-          `${this.apiUrl}/files/jersey-de-lana-2.jpg`,
-        ],
         featured: true,
       },
     ];
@@ -151,16 +109,16 @@ export class ProductSeeder implements OnModuleInit {
         description: productData.description,
         stock: productData.stock,
         price: productData.price,
-        discount: productData.discount,
+        offer: productData.offer,
         colors: productData.colors,
         sizes: productData.sizes,
         categories: productData.categories,
         featured: productData.featured || false,
+        quantity: productData.quantity, // Asegúrate de pasar el enum
       });
 
       await this.productRepository.save(product);
 
-      // Crear imágenes relacionadas para el producto
       for (const imageUrl of productData.images) {
         const image = this.productImageRepository.create({
           url: imageUrl,

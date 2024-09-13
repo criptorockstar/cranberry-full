@@ -71,7 +71,7 @@ export default function SignInForm() {
               height={150}
               width={150}
               alt="Logo"
-              className="xs:mb-[-60px] lg:mb-0"
+              className="xs:mb-[-60px] lg:mb-0 mt-[-20px]"
             />
           </div>
         </div>

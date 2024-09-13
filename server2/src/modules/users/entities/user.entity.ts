@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { CartEntity } from 'src/modules/cart/entities/cart.entity';
 import { OrderEntity } from 'src/modules/cart/entities/order.entity';
+import { Roles } from 'src/common/enums';
 
 @Entity('users')
 export class UserEntity {
@@ -26,10 +27,10 @@ export class UserEntity {
 
   @Column({
     type: 'enum',
-    enum: ['User', 'Admin'],
-    default: 'User',
+    enum: Roles,
+    default: Roles.USER, // Default value should be a single value
   })
-  roles: 'User' | 'Admin';
+  roles: Roles;
 
   @OneToMany(() => CartEntity, (cart) => cart.user)
   carts: CartEntity[];

@@ -6,7 +6,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, UserRound } from "lucide-react";
-import { RootState, useAppSelector } from "@/store/store";
+import { RootState, useAppSelector, useAppDispatch } from "@/store/store";
+import { clearUserState } from "@/store/slices/userSlice"
+import Cookies from "js-cookie";
 import Select from "@/app/_components/select";
 
 const getSelectOptions = (user: any) => {
@@ -18,12 +20,16 @@ const getSelectOptions = (user: any) => {
 
 export default function Header() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const user = useAppSelector((state: RootState) => state.user);
   const selectOptions = getSelectOptions(user);
 
   const onSelectChange = (value: string) => {
     if (value === "Cerrar sesión") {
-
+      Cookies.remove("accessToken");
+      Cookies.remove("refreshToken");
+      dispatch(clearUserState());
+      router.push("/iniciar-sesion");
     }
     if (value === "Administrar") {
       router.push("/dashboard");

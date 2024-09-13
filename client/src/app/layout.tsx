@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Header from "@/app/_components/Header"
 import Footer from "@/app/_components/Footer"
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -42,6 +43,7 @@ export default function RootLayout({
           {shouldRender && <Header />}
           {children}
           {shouldRender && <Footer />}
+          <Toaster />
         </ReduxProvider>
       </body>
     </html>
