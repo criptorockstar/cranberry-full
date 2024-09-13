@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Save, Trash2, Star, CirclePlus } from "lucide-react";
+import { Save, Trash2, Star, CirclePlus, StarOff } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 import Select from 'react-select';
@@ -27,6 +27,7 @@ interface AddProductFormValues {
   price: number;
   offer: number;
   quantity: "ilimitado" | "limitado";
+  featured: boolean;
   stock: number;
   categories: { value: string, label: string }[];
   colors: string[];
@@ -55,7 +56,7 @@ export default function AddProduct() {
   const [quantityOptions, setQuantityOptions] = useState("ilimitado");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-
+  const [featuredObject, setFeaturedObject] = useState(false);
 
   React.useEffect(() => {
     getCategoryList();
@@ -119,6 +120,11 @@ export default function AddProduct() {
     });
   };
 
+  const toggleFeatured = () => {
+    setFeaturedObject(!featuredObject);
+    setValue("featured", !featuredObject);
+  }
+
   const {
     control,
     handleSubmit,
@@ -135,6 +141,7 @@ export default function AddProduct() {
       price: 0,
       offer: 0,
       quantity: "ilimitado",
+      featured: false,
       stock: 0,
       categories: [],
       colors: [],
@@ -182,16 +189,18 @@ export default function AddProduct() {
       price: Number(data.price),
       offer: data.offer,
       stock: data.stock,
+      featured: data.featured,
       quantity: data.quantity,
       categories: data.categories,
+      featuredproduct: data.featured,
       colors: selectedColors,
       images: [...imageObject],
       sizes: selectedSizes
     }
 
     try {
-      const response = await createProduct(formdata);
-      console.log(response);
+      await createProduct(formdata);
+      router.push("/dashboard")
     } catch (error: any) {
       if (error.response && error.response.data.errors) {
         const serverErrors = error.response.data.errors as Record<string, string>;
@@ -515,8 +524,14 @@ export default function AddProduct() {
                   <Trash2 />
                 </Button>
 
-                <Button size="icon" className="bg-[#0a1d35]">
-                  <Star />
+                <Button
+                  onClick={toggleFeatured}
+                  size="icon" className="bg-[#0a1d35]" style={{ color: '#fff' }}>
+                  {featuredObject ? (
+                    <Star />
+                  ) : (
+                    <StarOff />
+                  )}
                 </Button>
               </div>
             </div>

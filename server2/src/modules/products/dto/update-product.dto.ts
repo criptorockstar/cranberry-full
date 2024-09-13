@@ -14,7 +14,7 @@ import {
   Allow,
 } from 'class-validator';
 
-export class AddProductDto {
+export class UpdateProductDto {
   @IsNotEmpty({ message: 'name: Debe ingresar un nombre' })
   @IsString({ message: 'name: Debe ser una cadena de texto' })
   name: string;
@@ -45,11 +45,11 @@ export class AddProductDto {
   @IsNumber({}, { message: 'offer: Debe ser un número' })
   offer: number;
 
-  @IsArray()
-  images: any;
-
   @Allow()
   featuredproduct: boolean;
+
+  @IsArray()
+  images: any;
 
   @IsArray({ message: 'colors: Debe ser una lista de colores' })
   @ArrayNotEmpty({ message: 'colors: Debe ingresar al menos un color' })

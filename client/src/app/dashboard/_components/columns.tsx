@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FilePenLine, Trash2 } from "lucide-react";
-import useProducts from "@/hooks/useProducts";
+import useAdmin from "@/hooks/useAdmin";
 import { useAppDispatch } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { deleteProduct as deleteProductFromSlice } from "@/store/slices/productSlice";
@@ -80,7 +80,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const { deleteProduct } = useProducts();
+      const { deleteProduct } = useAdmin();
       const router = useRouter();
       const dispatch = useAppDispatch();
       const product = row.original;

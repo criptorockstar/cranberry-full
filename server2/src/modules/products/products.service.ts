@@ -12,6 +12,7 @@ import { Color } from './entities/color.entity';
 import { Size } from './entities/size.entity';
 import { AddProductDto } from './dto/add-product.dto';
 import { AddCategoryDto } from './dto/add-category.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Quantities } from 'src/common/enums';
 import { ProductImage } from './entities/image.entity';
@@ -144,6 +145,7 @@ export class ProductsService {
       slug: this.slugify(addProductDto.name),
       description: addProductDto.description,
       stock: addProductDto.stock,
+      featured: addProductDto.featuredproduct,
       price: addProductDto.price,
       offer: addProductDto.offer,
       quantity:
@@ -196,6 +198,81 @@ export class ProductsService {
       throw new NotFoundException(`Category #${id} not found`);
     }
     return this.categoryRepository.remove(category);
+  }
+
+  async deleteProduct(id: number) {
+    // Buscar el producto por su ID
+    const product = await this.productRepository.findOne({
+      where: { id },
+      relations: ['images'], // Incluir imágenes si las necesitas eliminar
+    });
+
+    // Verificar si el producto existe
+    if (!product) {
+      throw new NotFoundException(`Product #${id} not found`);
+    }
+
+    // Eliminar las imágenes asociadas si es necesario
+    if (product.images.length > 0) {
+      await this.productImageRepository.remove(product.images);
+    }
+
+    // Eliminar el producto
+    return this.productRepository.remove(product);
+  }
+
+  async updateProduct(id: number, changes: UpdateProductDto) {
+    // Buscar el producto por su ID
+    const product = await this.productRepository.findOne({
+      where: { id },
+      relations: ['categories', 'colors', 'sizes', 'images'],
+    });
+
+    if (!product) {
+      throw new NotFoundException(`Product #${id} not found`);
+    }
+
+    // Actualizar los campos proporcionados en el DTO
+    Object.assign(product, changes);
+
+    // Actualizar las categorías, colores, tamaños e imágenes si se proporcionan
+    if (changes.categories) {
+      const categoryIds = changes.categories.map((categoryDto) =>
+        parseInt(categoryDto.value, 10),
+      );
+      const categories = await this.categoryRepository.find({
+        where: { id: In(categoryIds) },
+      });
+      product.categories = categories;
+    }
+
+    if (changes.colors) {
+      const colors = await this.colorRepository.find({
+        where: { name: In(changes.colors.map((color) => color.toLowerCase())) },
+      });
+      product.colors = colors;
+    }
+
+    if (changes.sizes) {
+      const sizes = await this.sizeRepository.find({
+        where: { name: In(changes.sizes.map((size) => size.toLowerCase())) },
+      });
+      product.sizes = sizes;
+    }
+
+    if (changes.images) {
+      const imageEntities = await Promise.all(
+        changes.images.map(async (url: string) => {
+          const image = this.productImageRepository.create({ url });
+          await this.productImageRepository.save(image);
+          return image;
+        }),
+      );
+      product.images = imageEntities;
+    }
+
+    // Guardar los cambios en la base de datos
+    return this.productRepository.save(product);
   }
 
   async updateCategory(id: number, changes: UpdateCategoryDto) {

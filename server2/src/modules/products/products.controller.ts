@@ -18,6 +18,7 @@ import { Roles } from 'src/common/enums';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { AddProductDto } from './dto/add-product.dto';
 import { AddCategoryDto } from './dto/add-category.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import multerOptions from 'src/common/multer.config';
@@ -81,12 +82,27 @@ export class ProductsController {
   }
 
   @UseGuards(AuthenticationGuard, AuthorizeGuard([Roles.ADMIN]))
+  @Delete('/delete-product/:id')
+  async deleteProduct(@Param('id') id: number) {
+    return this.productsService.deleteProduct(id);
+  }
+
+  @UseGuards(AuthenticationGuard, AuthorizeGuard([Roles.ADMIN]))
   @Put('/categories/category/:id')
   async updateCategory(
     @Param('id') id: number,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
     return this.productsService.updateCategory(id, updateCategoryDto);
+  }
+
+  @UseGuards(AuthenticationGuard, AuthorizeGuard([Roles.ADMIN]))
+  @Put('/product/:id')
+  async updateProduct(
+    @Param('id') id: number,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
+    return this.productsService.updateProduct(id, updateProductDto);
   }
 
   @Get('/categories/category/:id')

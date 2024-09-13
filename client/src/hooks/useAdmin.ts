@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createAxiosInstance } from "./axios-config";
 import { deleteCategory as deleteCategoryAction } from "@/store/slices/categorySlice";
+import { deleteProduct as deleteProductAction } from "@/store/slices/productSlice";
 import { useAppDispatch } from "@/store/store";
 
 const axios = createAxiosInstance();
@@ -37,6 +38,21 @@ const useAdmin = () => {
         `/products/categories/delete-category/${id}`,
       );
       dispatch(deleteCategoryAction(id));
+      return response;
+    } catch (err: any) {
+      setError(err.response?.data?.message || "An error occurred");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteProduct = async (id: number) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.delete(`/products/delete-product/${id}`);
+      dispatch(deleteProductAction(id));
       return response;
     } catch (err: any) {
       setError(err.response?.data?.message || "An error occurred");
@@ -122,8 +138,9 @@ const useAdmin = () => {
     deleteCategory,
     updateCategory,
     createProduct,
-    uploadImage,
+    deleteProduct,
     updateProduct,
+    uploadImage,
     loading,
     error,
   };

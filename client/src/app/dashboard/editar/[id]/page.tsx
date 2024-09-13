@@ -36,6 +36,7 @@ interface updateProductFormValues {
   price: number;
   offer: number;
   quantity: "ilimitado" | "limitado";
+  featured: boolean;
   stock: number;
   categories: { value: string, label: string }[];
   colors: string[];
@@ -86,6 +87,7 @@ export default function EditProduct({ params }: any) {
       price: 0,
       offer: 0,
       quantity: "ilimitado",
+      featured: false,
       stock: 0,
       categories: [],
       colors: [],
@@ -101,6 +103,7 @@ export default function EditProduct({ params }: any) {
       setValue("price", currentProduct.price);
       setValue("offer", currentProduct.offer);
       setValue("stock", currentProduct.stock);
+      setValue("featured", currentProduct.featured);
 
       setValue("quantity", currentProduct?.quantity as "ilimitado" | "limitado")
       setQuantityOptions(currentProduct?.quantity);
@@ -323,8 +326,8 @@ export default function EditProduct({ params }: any) {
     }
 
     try {
-      const response = await updateProduct(params.id, formdata);
-      console.log(response);
+      await updateProduct(params.id, formdata);
+      router.push("/dashboard")
     } catch (error: any) {
       if (error.response && error.response.data.errors) {
         const serverErrors = error.response.data.errors as Record<string, string>;
