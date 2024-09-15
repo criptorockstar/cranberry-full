@@ -8,6 +8,9 @@ import { Save, Trash2 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import useAdmin from "@/hooks/useAdmin"
 import { useRouter } from "next/navigation";
+import MenuComponent from "@/app/dashboard/_components/menu"
+import DrawerComponent from "@/app/dashboard/_components/drawer"
+import { Tag, Globe, LayoutDashboard, NotepadText } from "lucide-react";
 
 interface addCategoryFormValues {
   name: string;
@@ -50,7 +53,7 @@ export default function AddCategory() {
   return (
     <React.Fragment>
       <div className="p-6">
-        <div className="flex flex-row justify-between">
+        <div className="flex flex-col xl:flex-row justify-between">
           <div>
             <div className="font-semibold text-2xl">Categorias</div>
             <p>
@@ -59,7 +62,7 @@ export default function AddCategory() {
             </p>
           </div>
 
-          <div className="flex flex-row space-x-2">
+          <div className="flex flex-row space-x-2 xl:mt-0 mt-4">
             {/* Botón para limpiar el formulario */}
             <Button size="icon" onClick={clearForm}>
               <Trash2 />
