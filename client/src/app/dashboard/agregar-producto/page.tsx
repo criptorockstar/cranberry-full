@@ -111,7 +111,6 @@ export default function AddProduct() {
     });
   };
 
-
   const getSizeList = () => {
     getSizes().then((res) => {
       console.log("Size list response:", res.data);
@@ -268,6 +267,25 @@ export default function AddProduct() {
               <MenuComponent />
             </div>
             <div>Agregar producto</div>
+          </div>
+
+          <div className="mt-2 flex flex-row justify-end items-center gap-4">
+            <Button size="icon" className="bg-[#0a1d35]" onClick={handleSubmit(onSubmit)}>
+              <Save />
+            </Button>
+            <Button size="icon" className="bg-[#0a1d35]">
+              <Trash2 />
+            </Button>
+
+            <Button
+              onClick={toggleFeatured}
+              size="icon" className="bg-[#0a1d35]" style={{ color: '#fff' }}>
+              {featuredObject ? (
+                <Star color="#fff700" strokeWidth={1.75} />
+              ) : (
+                <StarOff color="#f00" />
+              )}
+            </Button>
           </div>
         </div>
       </div>
@@ -533,8 +551,8 @@ export default function AddProduct() {
             </div>
           </div>
 
-          <div className="w-[100px] hidden">
-            <div className="xl:grid grid-cols-2 fixed hidden">
+          <div className="w-[100px] hidden xl:block">
+            <div className="xl:grid grid-cols-2 fixed">
               <div className="mr-1">
                 <Button size="icon" className="bg-[#0a1d35]" onClick={handleSubmit(onSubmit)}>
                   <Save />
@@ -550,9 +568,9 @@ export default function AddProduct() {
                   onClick={toggleFeatured}
                   size="icon" className="bg-[#0a1d35]" style={{ color: '#fff' }}>
                   {featuredObject ? (
-                    <Star />
+                    <Star color="#fff700" strokeWidth={1.75} />
                   ) : (
-                    <StarOff />
+                    <StarOff color="#f00" />
                   )}
                 </Button>
               </div>

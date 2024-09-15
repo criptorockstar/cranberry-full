@@ -22,6 +22,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import multerOptions from 'src/common/multer.config';
+import { extname } from 'path';
 
 @Controller('products')
 export class ProductsController {
@@ -114,6 +115,11 @@ export class ProductsController {
   @UseInterceptors(FileInterceptor('image', multerOptions))
   async uploadProductImage(@UploadedFile() file: Express.Multer.File) {
     try {
+      if (!file) {
+        throw new Error('No file provided');
+      }
+
+      // Generar URL de acceso al archivo subido
       const imageUrl = await this.productsService.uploadImage(file);
       return { imageUrl };
     } catch (error: any) {

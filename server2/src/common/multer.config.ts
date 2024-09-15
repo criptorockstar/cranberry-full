@@ -1,6 +1,11 @@
 import { existsSync, mkdirSync } from 'fs';
 import { diskStorage } from 'multer';
+import { readFile, writeFile } from 'fs';
 import { extname } from 'path';
+import { promisify } from 'util';
+const readFileAsync = promisify(readFile);
+const writeFileAsync = promisify(writeFile);
+import sharp from 'sharp';
 
 const multerOptions = {
   storage: diskStorage({

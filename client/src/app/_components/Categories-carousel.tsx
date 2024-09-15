@@ -13,7 +13,6 @@ import { setCategories } from "@/store/slices/categorySlice";
 import useCategories from "@/hooks/useCategories";
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card"
 
 export default function CategoriesCarousel() {
   const dispatch = useAppDispatch();
@@ -44,11 +43,11 @@ export default function CategoriesCarousel() {
         }}
       >
         <div className="relative">
-          <div className="mb-4">
+          <div className="mb-4 font-weight-600 xl:text-[30px]">
             Categorias
           </div>
 
-          <div>
+          <div className="">
             <CarouselPrevious />
             <CarouselNext />
           </div>
@@ -62,11 +61,12 @@ export default function CategoriesCarousel() {
               <div className="w-full max-w-[100%] relative mx-auto">
                 <Link href="/">
                   <Image
-                    src={category.image}
+                    src={`${category.image}`}
                     alt={category.name}
-                    className="w-full h-auto"
+                    className="object-cover w-full h-full"
                     width={115}
                     height={68}
+                    sizes="(max-width: 600px) 100px, 100px"
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-30 rounded-[4px]" />
                   <div className="hidden absolute bottom-4 left-1/2 transform -translate-x-1/2">

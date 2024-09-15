@@ -1,6 +1,6 @@
 "use client";
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from "@/store/store";
+import { RootState, useAppSelector, useAppDispatch } from "@/store/store";
 import { toggleDrawer } from "@/store/slices/drawerSlice";
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -15,7 +15,7 @@ interface DrawerComponentProps {
 }
 
 export default function DrawerComponent({ items }: DrawerComponentProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const isOpen = useSelector((state: RootState) => state.drawer);
 
   const toggle = () => {
@@ -47,6 +47,7 @@ export default function DrawerComponent({ items }: DrawerComponentProps) {
           {items.map((item, index) => (
             <ListItem key={index} disablePadding>
               <ListItemButton component="a" href={item.slug}
+                onClick={() => toggle()}
                 className={`
                   ${item.active
                     ? "bg-[#0a1d35] text-white"

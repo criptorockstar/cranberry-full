@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Save, Trash2, Star, CirclePlus } from "lucide-react";
+import { Save, Trash2, Star, CirclePlus, StarOff } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 import Select from 'react-select';
@@ -72,6 +72,12 @@ export default function EditProduct({ params }: any) {
   const [quantityOptions, setQuantityOptions] = useState("ilimitado");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [featuredObject, setFeaturedObject] = useState(false);
+
+  const toggleFeatured = () => {
+    setFeaturedObject(!featuredObject);
+    setValue("featured", !featuredObject);
+  }
 
   const {
     control,
@@ -107,7 +113,7 @@ export default function EditProduct({ params }: any) {
       setValue("offer", currentProduct.offer);
       setValue("stock", currentProduct.stock);
       setValue("featured", currentProduct.featured);
-
+      setFeaturedObject(currentProduct.featured)
       setValue("quantity", currentProduct?.quantity as "ilimitado" | "limitado")
       setQuantityOptions(currentProduct?.quantity);
 
@@ -366,6 +372,25 @@ export default function EditProduct({ params }: any) {
             </div>
             <div>Editar producto</div>
           </div>
+
+          <div className="mt-2 flex flex-row justify-end items-center gap-4">
+            <Button size="icon" className="bg-[#0a1d35]" onClick={handleSubmit(onSubmit)}>
+              <Save />
+            </Button>
+            <Button size="icon" className="bg-[#0a1d35]">
+              <Trash2 />
+            </Button>
+
+            <Button
+              onClick={toggleFeatured}
+              size="icon" className="bg-[#0a1d35]" style={{ color: '#fff' }}>
+              {featuredObject ? (
+                <Star color="#fff700" strokeWidth={1.75} />
+              ) : (
+                <StarOff color="#f00" />
+              )}
+            </Button>
+          </div>
         </div>
       </div>
       <div className="p-6 bg-[#f0f0f0]">
@@ -428,7 +453,7 @@ export default function EditProduct({ params }: any) {
                 </div>
               </div>
 
-              <div className="mt-0 flex flex-row gap-4 flex-wrap ml-4">
+              <div className="mt-4 flex flex-row gap-4 flex-wrap">
                 {imageObject.map((imageUrl, index) => (
                   <div key={index} className="relative h-[150px] w-[150px] bg-gray-100 rounded-md overflow-hidden">
                     <img
@@ -631,8 +656,8 @@ export default function EditProduct({ params }: any) {
             </div>
           </div>
 
-          <div className="w-[100px] hidden">
-            <div className="grid grid-cols-2 fixed">
+          <div className="w-[100px] hidden xl:block">
+            <div className="xl:grid grid-cols-2 fixed">
               <div className="mr-1">
                 <Button size="icon" className="bg-[#0a1d35]" onClick={handleSubmit(onSubmit)}>
                   <Save />
@@ -644,8 +669,14 @@ export default function EditProduct({ params }: any) {
                   <Trash2 />
                 </Button>
 
-                <Button size="icon" className="bg-[#0a1d35]">
-                  <Star />
+                <Button
+                  onClick={toggleFeatured}
+                  size="icon" className="bg-[#0a1d35]" style={{ color: '#fff' }}>
+                  {featuredObject ? (
+                    <Star color="#fff700" strokeWidth={1.75} />
+                  ) : (
+                    <StarOff color="#f00" />
+                  )}
                 </Button>
               </div>
             </div>

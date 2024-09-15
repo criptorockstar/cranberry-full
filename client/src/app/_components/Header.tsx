@@ -42,7 +42,7 @@ export default function Header() {
         <Button
           onClick={() => router.push("/cart")}
           size="icon"
-          className="flex sm:hidden ml-5 bg-[#f0f0f0] rounded-full hover:bg-[transparent]"
+          className="flex sm:hidden ml-5 bg-[transparent] rounded-full hover:bg-[transparent]"
         >
           <img src="/shopping_bag.svg" width={40} height={40} className="text-gray-900" />
         </Button>
@@ -54,7 +54,7 @@ export default function Header() {
         <Button
           onClick={() => router.push("/iniciar-sesion")}
           size="icon"
-          className="flex sm:hidden mr-5 bg-[#f0f0f0] rounded-full hover:bg-[transparent] bg-[transparent]"
+          className="flex sm:hidden mr-5 rounded-full hover:bg-[transparent] bg-[transparent]"
         >
           <UserRound size={40} className="text-gray-900  hover:bg-[transparent] bg-[transparent]" />
         </Button>

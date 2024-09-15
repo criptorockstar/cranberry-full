@@ -54,7 +54,7 @@ export default function SignInPage() {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       await signIn(data.email, data.password);
-      router.push("/");
+      window.location.href = "/";
     } catch (error: any) {
       if (error.response && error.response.data.errors) {
         const serverErrors = error.response.data.errors as Record<string, string>;

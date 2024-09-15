@@ -11,6 +11,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import useAdmin from "@/hooks/useAdmin"
 import useCategories from "@/hooks/useCategories";
+import MenuComponent from "@/app/dashboard/_components/menu"
+import DrawerComponent from "@/app/dashboard/_components/drawer"
+import { Tag, Globe, LayoutDashboard, NotepadText } from "lucide-react";
 
 interface updateCategoryFormValues {
   name: string;
@@ -86,19 +89,32 @@ export default function EditCategory({ params }: any) {
     });
   };
 
+  const items = [
+    { slug: "/dashboard", text: "Productos", icon: <Tag size={20} />, active: true },
+    { slug: "/dashboard/categorias", text: "Categorias", icon: <LayoutDashboard size={20} /> },
+    { slug: "/dashboard/pedidos", text: "Pedidos", icon: <NotepadText size={20} /> },
+    { slug: "/", text: "Ir al sitio Web", icon: <Globe size={20} /> },
+  ];
+
   return (
     <React.Fragment>
+      <DrawerComponent items={items} />
       <div className="p-6">
-        <div className="flex flex-row justify-between">
+        <div className="flex flex-col xl:flex-row justify-between">
           <div>
-            <div className="font-semibold text-2xl">Categorias</div>
+            <div className="font-semibold text-2xl flex flex-row items-center">
+              <div>
+                <MenuComponent />
+              </div>
+              <div>Categorias</div>
+            </div>
             <p>
               Crea categorías para organizar tus productos y tener un mejor
               control de lo que vendes.
             </p>
           </div>
 
-          <div className="flex flex-row space-x-2">
+          <div className="flex flex-row space-x-2 xl:mt-0 mt-4">
             {/* Botón para limpiar el formulario */}
             <Button size="icon" onClick={clearForm}>
               <Trash2 />

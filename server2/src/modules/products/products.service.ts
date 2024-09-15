@@ -48,7 +48,7 @@ export class ProductsService {
   async findAllFeatured() {
     return this.productRepository.find({
       where: { featured: true },
-      relations: ['images'],
+      relations: ['images', 'colors', 'sizes', 'categories'],
     });
   }
 
@@ -145,7 +145,6 @@ export class ProductsService {
       slug: this.slugify(addProductDto.name),
       description: addProductDto.description,
       stock: addProductDto.stock,
-      featured: addProductDto.featuredproduct,
       price: addProductDto.price,
       offer: addProductDto.offer,
       quantity:

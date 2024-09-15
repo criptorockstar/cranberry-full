@@ -21,6 +21,20 @@ const useProducts = () => {
     }
   };
 
+  const getFeaturedProducts = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get("/products/featured");
+      return response;
+    } catch (err: any) {
+      setError(err.response?.data?.message || "An error occurred");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getProduct = async (id: number) => {
     setLoading(true);
     setError(null);
@@ -38,6 +52,7 @@ const useProducts = () => {
   return {
     getProducts,
     getProduct,
+    getFeaturedProducts,
     loading,
     error,
   };

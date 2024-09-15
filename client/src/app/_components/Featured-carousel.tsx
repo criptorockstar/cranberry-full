@@ -17,7 +17,7 @@ import Link from "next/link";
 
 export default function FeaturedCarousel() {
   const dispatch = useAppDispatch();
-  const { getProducts } = useProducts();
+  const { getFeaturedProducts } = useProducts();
 
   const products = useAppSelector((state) => state.products.products);
 
@@ -26,7 +26,7 @@ export default function FeaturedCarousel() {
   }, []);
 
   const getProductList = () => {
-    getProducts().then((res) => {
+    getFeaturedProducts().then((res) => {
       console.log("Product list response:", res.data);
       if (Array.isArray(res.data)) {
 
@@ -78,7 +78,7 @@ export default function FeaturedCarousel() {
         }}
       >
         <div className="relative">
-          <div className="mb-4">
+          <div className="mb-4 font-weight-600 xl:text-[30px]">
             Productos destacados
           </div>
 
@@ -96,11 +96,12 @@ export default function FeaturedCarousel() {
               <div className="w-full max-w-[100%] relative mx-auto">
                 <Link href="/">
                   <Image
-                    src={product.images[0].url}
+                    src={`${product.images[0].url}?width=115&height=68`}
                     alt={product.name}
-                    className="w-full h-auto"
+                    className="object-cover w-full h-full"
                     width={115}
                     height={68}
+                    sizes="(max-width: 600px) 100px, 100px"
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-30 rounded-[4px]" />
                   <div className="hidden absolute bottom-4 left-1/2 transform -translate-x-1/2">
