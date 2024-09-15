@@ -9,8 +9,6 @@ import { useAppDispatch } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { deleteProduct as deleteProductFromSlice } from "@/store/slices/productSlice";
 
-// Mantener definiciones locales de tipos, si es necesario en este archivo.
-
 export type Image = {
   id: number;
   url: string;

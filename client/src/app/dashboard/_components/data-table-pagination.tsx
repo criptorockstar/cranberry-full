@@ -23,12 +23,12 @@ export function DataTablePagination<TData>({
   table,
 }: DataTablePaginationProps<TData>) {
   return (
-    <div className="flex items-center justify-between px-2">
-      <div className="flex-1 text-sm text-muted-foreground">
+    <div className="flex flex-col space-y-4 items-center justify-between px-2 lg:flex-row lg:space-y-0">
+      <div className="text-sm text-muted-foreground">
         {table.getFilteredSelectedRowModel().rows.length} de{" "}
         {table.getFilteredRowModel().rows.length} fila(s) seleccionadas.
       </div>
-      <div className="flex items-center space-x-6 lg:space-x-8">
+      <div className="flex flex-col space-y-4 lg:space-y-0 lg:flex-row lg:items-center lg:space-x-8">
         <div className="flex items-center space-x-2">
           <p className="text-sm font-medium ml-2">Filas por página</p>
           <Select
@@ -49,14 +49,14 @@ export function DataTablePagination<TData>({
             </SelectContent>
           </Select>
         </div>
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Pagina {table.getState().pagination.pageIndex + 1} de{" "}
+        <div className="flex items-center justify-center text-sm font-medium">
+          Página {table.getState().pagination.pageIndex + 1} de{" "}
           {table.getPageCount()}
         </div>
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
-            className="hidden h-8 w-8 p-0 lg:flex"
+            className="h-8 w-8 p-0"
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
           >
@@ -83,7 +83,7 @@ export function DataTablePagination<TData>({
           </Button>
           <Button
             variant="outline"
-            className="hidden h-8 w-8 p-0 lg:flex"
+            className="h-8 w-8 p-0"
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
           >

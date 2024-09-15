@@ -19,6 +19,9 @@ import { setColors } from "@/store/slices/colorSlice";
 import { setSizes } from "@/store/slices/sizeSlice";
 import { useAppDispatch, useAppSelector } from '@/store/store';
 import useAdmin from "@/hooks/useAdmin";
+import MenuComponent from "../_components/menu";
+import DrawerComponent from "../_components/drawer";
+import { Tag, Globe, LayoutDashboard, NotepadText } from "lucide-react";
 
 interface AddProductFormValues {
   name: string;
@@ -130,8 +133,6 @@ export default function AddProduct() {
     handleSubmit,
     formState: { errors: formErrors },
     setError,
-    clearErrors,
-    register,
     setValue,
   } = useForm<AddProductFormValues>({
     defaultValues: {
@@ -222,8 +223,8 @@ export default function AddProduct() {
     if (e.target.files) {
       const files = Array.from(e.target.files);
 
-      if (images.length + files.length > 4) {
-        setImageError("Puedes subir un máximo de 4 imágenes.");
+      if (images.length + files.length > 3) {
+        setImageError("Puedes subir un máximo de 3 imágenes.");
         return;
       }
       setImageError(null);
@@ -250,12 +251,32 @@ export default function AddProduct() {
     return value
   }
 
+  const items = [
+    { slug: "/dashboard", text: "Productos", icon: <Tag size={20} />, active: true },
+    { slug: "/dashboard/categorias", text: "Categorias", icon: <LayoutDashboard size={20} /> },
+    { slug: "/dashboard/pedidos", text: "Pedidos", icon: <NotepadText size={20} /> },
+    { slug: "/", text: "Ir al sitio Web", icon: <Globe size={20} /> },
+  ];
+
   return (
     <React.Fragment>
-      <div className="p-6">
-        <div className="flex flex-row gap-8 h-[88%]">
+      <DrawerComponent items={items} />
+      <div className="px-4 sm:px-8">
+        <div className="font-semibold text-2xl mt-2">
+          <div className="flex flex-row items-center">
+            <div>
+              <MenuComponent />
+            </div>
+            <div>Agregar producto</div>
+          </div>
+        </div>
+      </div>
+      <div className="p-6 bg-[#f0f0f0]">
+        <div className="flex flex-row xl:gap-8 xl:h-[88%]">
           <div className="w-full flex-grow">
-            <div className="text-2xl">Información</div>
+            <div className="text-2xl">
+              Información
+            </div>
             <div className="mt-3 p-4 bg-white rounded-xl">
               <div className="mb-2">Nombre del artículo</div>
               <Controller
@@ -293,8 +314,10 @@ export default function AddProduct() {
             </div>
 
             <div className="mt-6 text-xl">Fotos</div>
-            <div className="mt-2 p-4 bg-white rounded-xl flex flex-row">
-              <div className="relative h-[150px] w-[150px] border-2 border-dashed border-gray-400 flex items-center justify-center rounded-md cursor-pointer">
+            <div className="mt-2 p-4 bg-white rounded-xl flex flex-col ">
+
+              {/* Contenedor para subir nuevas imágenes */}
+              <div className="relative w-full xl:w-[150px] h-[150px] border-2 border-dashed border-gray-400 flex items-center justify-center rounded-md cursor-pointer">
                 <input
                   name="pictures"
                   type="file"
@@ -304,7 +327,6 @@ export default function AddProduct() {
                   ref={fileInputRef}
                 />
                 <CirclePlus size={48} className="text-gray-500" />
-
                 <div className="absolute bottom-0 mb-0">
                   {imageError && (
                     <div className="text-red-500 text-center">{imageError}</div>
@@ -312,19 +334,19 @@ export default function AddProduct() {
                 </div>
               </div>
 
-              <div className="mt-0 flex flex-row gap-4 flex-wrap ml-4">
+              {/* Contenedor para mostrar imágenes subidas */}
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 ">
                 {images.map((image, index) => (
-                  <div key={index} className="relative h-[150px] w-[150px] bg-gray-100 rounded-md overflow-hidden">
+                  <div key={index} className="relative bg-gray-100 rounded-md overflow-hidden">
                     <img
                       src={URL.createObjectURL(image)}
                       alt="Imagen subida"
                       className="h-full w-full object-cover"
                     />
-
                     {/* Botón para eliminar la imagen */}
                     <Button
                       size="icon"
-                      className="rounded-full absolute inset-0 m-auto bg-white text-red-500"
+                      className="rounded-full absolute top-2 right-2 bg-white text-red-500"
                       style={{ height: "40px", width: "40px" }}
                       onClick={() => handleDeleteImage(index)}
                     >
@@ -383,7 +405,7 @@ export default function AddProduct() {
             </div>
 
             <div className="mt-6 text-xl">Stock</div>
-            <div className="mt-3 p-8 pt-11  bg-white rounded-xl flex flex-row">
+            <div className="mt-3 p-8 pt-11  bg-white rounded-xl flex flex-col xl:flex-row">
               <Controller
                 name="quantity"
                 control={control}
@@ -511,8 +533,8 @@ export default function AddProduct() {
             </div>
           </div>
 
-          <div className="w-[100px]">
-            <div className="grid grid-cols-2 fixed">
+          <div className="w-[100px] hidden">
+            <div className="xl:grid grid-cols-2 fixed hidden">
               <div className="mr-1">
                 <Button size="icon" className="bg-[#0a1d35]" onClick={handleSubmit(onSubmit)}>
                   <Save />

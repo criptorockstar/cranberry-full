@@ -48,7 +48,7 @@ export default function AdminLayout({ children }: any) {
           </Sidebar>
         )}
 
-        <div className="bg-[#f0f0f0] flex-1 p-4 overflow-y-auto">
+        <div className="flex-1 bg-[#f0f0f0]">
           {children}
         </div>
       </div>

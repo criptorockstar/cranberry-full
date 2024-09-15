@@ -5,17 +5,44 @@ import { usePathname } from "next/navigation";
 import Header from "@/app/_components/Header"
 import Footer from "@/app/_components/Footer"
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster"
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
+import { theme } from './theme';
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const manrope = localFont({
+  src: [
+    {
+      path: "./fonts/Manrope-ExtraBold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Manrope-ExtraLight.ttf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Manrope-Light.ttf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Manrope-Medium.ttf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Manrope-Regular.ttf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "./fonts/Manrope-SemiBold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-manrope",
 });
 
 import dynamic from "next/dynamic";
@@ -37,13 +64,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${manrope.variable} antialiased`}
       >
         <ReduxProvider>
-          {shouldRender && <Header />}
-          {children}
-          {shouldRender && <Footer />}
-          <Toaster />
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            {shouldRender && <Header />}
+            {children}
+            {shouldRender && <Footer />}
+          </ThemeProvider>
         </ReduxProvider>
       </body>
     </html>

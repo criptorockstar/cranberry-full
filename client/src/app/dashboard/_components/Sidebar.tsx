@@ -12,7 +12,7 @@ export default function Sidebar({ children }: SidebarProps) {
   return (
     <React.Fragment>
       <aside className="h-screen w-[250px]">
-        <nav className="h-full flex flex-col bg-white border-r shadow-sm">
+        <nav className="h-full flex flex-col bg-white border-r shadow-sm fixed w-[250px]">
           <div className="p-4 pb-2 flex justify-center items-center">
             <Image src="/logo.svg" alt="logo" width={100} height={100} />
           </div>

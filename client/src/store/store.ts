@@ -8,6 +8,7 @@ import { productReducer } from "./slices/productSlice";
 import { orderReducer } from "./slices/orderSlice";
 import { colorReducer } from "./slices/colorSlice";
 import { sizeReducer } from "./slices/sizeSlice";
+import { drawerReducer } from "./slices/drawerSlice";
 
 const createNoopStorage = () => {
   return {
@@ -34,7 +35,17 @@ const userPersistConfig = {
   whitelist: ["role", "email"],
 };
 
+const drawerPersistConfig = {
+  key: "drawer",
+  storage,
+  whitelist: ["isOpen"],
+};
+
 const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
+const persistedDrawerReducer = persistReducer(
+  drawerPersistConfig,
+  drawerReducer,
+);
 
 const rootReducer = combineReducers({
   user: persistedUserReducer,
@@ -43,6 +54,7 @@ const rootReducer = combineReducers({
   orders: orderReducer,
   colors: colorReducer,
   sizes: sizeReducer,
+  drawer: persistedDrawerReducer,
 });
 
 export const store = configureStore({

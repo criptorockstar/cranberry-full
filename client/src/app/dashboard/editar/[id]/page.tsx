@@ -1,15 +1,11 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { setCurrentProduct } from "@/store/slices/productSlice";
-import { useAppDispatch, useAppSelector } from '@/store/store';
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useRouter } from "next/navigation";
-import useAdmin from "@/hooks/useAdmin"
-import useProducts from "@/hooks/useProducts";
 import { Save, Trash2, Star, CirclePlus } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
@@ -21,7 +17,14 @@ import useSizes from "@/hooks/useSizes";
 import { setCategories } from "@/store/slices/categorySlice";
 import { setColors } from "@/store/slices/colorSlice";
 import { setSizes } from "@/store/slices/sizeSlice";
+import { useAppDispatch, useAppSelector } from '@/store/store';
+import useAdmin from "@/hooks/useAdmin"
 import { Image, Size, Category } from '@/store/slices/productSlice';
+import { setCurrentProduct } from "@/store/slices/productSlice";
+import useProducts from "@/hooks/useProducts";
+import MenuComponent from "@/app/dashboard/_components/menu";
+import DrawerComponent from "@/app/dashboard/_components/drawer";
+import { Tag, Globe, LayoutDashboard, NotepadText } from "lucide-react";
 
 interface Color {
   id: number;
@@ -345,9 +348,27 @@ export default function EditProduct({ params }: any) {
     }
   };
 
+  const items = [
+    { slug: "/dashboard", text: "Productos", icon: <Tag size={20} />, active: true },
+    { slug: "/dashboard/categorias", text: "Categorias", icon: <LayoutDashboard size={20} /> },
+    { slug: "/dashboard/pedidos", text: "Pedidos", icon: <NotepadText size={20} /> },
+    { slug: "/", text: "Ir al sitio Web", icon: <Globe size={20} /> },
+  ];
+
   return (
     <React.Fragment>
-      <div className="p-6">
+      <DrawerComponent items={items} />
+      <div className="px-4 sm:px-8">
+        <div className="font-semibold text-2xl mt-2">
+          <div className="flex flex-row items-center">
+            <div>
+              <MenuComponent />
+            </div>
+            <div>Editar producto</div>
+          </div>
+        </div>
+      </div>
+      <div className="p-6 bg-[#f0f0f0]">
         <div className="flex flex-row gap-8 h-[88%]">
           <div className="w-full flex-grow">
             <div className="text-2xl">Información</div>
@@ -388,7 +409,7 @@ export default function EditProduct({ params }: any) {
             </div>
 
             <div className="mt-6 text-xl">Fotos</div>
-            <div className="mt-2 p-4 bg-white rounded-xl flex flex-row">
+            <div className="mt-2 p-4 bg-white rounded-xl flex-row">
               <div className="relative h-[150px] w-[150px] border-2 border-dashed border-gray-400 flex items-center justify-center rounded-md cursor-pointer">
                 <input
                   name="pictures"
@@ -478,7 +499,7 @@ export default function EditProduct({ params }: any) {
             </div>
 
             <div className="mt-6 text-xl">Stock</div>
-            <div className="mt-3 p-8 pt-11  bg-white rounded-xl flex flex-row">
+            <div className="mt-3 p-8 pt-11  bg-white rounded-xl flex flex-col xl:flex-row">
               <Controller
                 name="quantity"
                 control={control}
@@ -610,7 +631,7 @@ export default function EditProduct({ params }: any) {
             </div>
           </div>
 
-          <div className="w-[100px]">
+          <div className="w-[100px] hidden">
             <div className="grid grid-cols-2 fixed">
               <div className="mr-1">
                 <Button size="icon" className="bg-[#0a1d35]" onClick={handleSubmit(onSubmit)}>

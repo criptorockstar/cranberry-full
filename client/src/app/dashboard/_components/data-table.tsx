@@ -57,8 +57,8 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className="flex items-center w-full py-4">
-        <div className="flex flex-row justify-between w-full">
+      <div className="flex items-center w-full py-4 ">
+        <div className="flex flex-col-reverse xl:flex-row xl:justify-between w-full">
           <Input
             placeholder="Buscar producto por nombre.."
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -68,7 +68,7 @@ export function DataTable<TData, TValue>({
             className="max-w-sm bg-white"
           />
 
-          <div className="flex flex-row space-x-4">
+          <div className="flex flex-row space-x-4 mb-4 xl:mb-0">
             <Button size='icon' className="rounded-full">
               <Trash2 />
             </Button>
@@ -79,33 +79,29 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
 
-      <div className="rounded-md border bg-white px-4">
+      {/* Ajustado overflow y padding para móviles */}
+      <div className="rounded-md border bg-white px-4 overflow-x-auto">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    </TableHead>
-                  )
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
