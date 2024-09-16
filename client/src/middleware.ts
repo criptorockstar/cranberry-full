@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://api.cranberrymayorista.com";
+
 // Función para verificar si el token es válido
 async function verifyToken(accessToken: string) {
   try {
-    const response = await fetch("http://localhost:5001/users/verify-token", {
+    const response = await fetch(`${API_URL}/users/verify-token`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -24,7 +27,7 @@ async function verifyToken(accessToken: string) {
 // Función para verificar si el usuario es admin
 async function verifyAdmin(accessToken: string) {
   try {
-    const response = await fetch("http://localhost:5001/users/isadmin", {
+    const response = await fetch(`${API_URL}/users/isadmin`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

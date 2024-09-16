@@ -3,7 +3,8 @@ import Cookies from "js-cookie";
 import { clearUserState } from "@/store/slices/userSlice";
 import { store } from "@/store/store";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://api.cranberrymayorista.com";
 
 // Instancia para solicitudes autenticadas
 const createAxiosInstance = () => {
