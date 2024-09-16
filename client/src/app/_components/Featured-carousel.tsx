@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import {
   Carousel,
@@ -14,6 +12,7 @@ import { useAppDispatch, useAppSelector } from '@/store/store';
 import { Image as image, Color, Size, Category } from '@/store/slices/productSlice';
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function FeaturedCarousel() {
   const dispatch = useAppDispatch();
@@ -29,7 +28,6 @@ export default function FeaturedCarousel() {
     getFeaturedProducts().then((res) => {
       console.log("Product list response:", res.data);
       if (Array.isArray(res.data)) {
-
         const formattedProducts = res.data.map((item: any) => ({
           id: item.id,
           name: item.name,
@@ -93,8 +91,8 @@ export default function FeaturedCarousel() {
               key={product.id}
               className="ss:basis-1/3 sm:basis-1/3 md:basis-1/4 lg:basis-1/4"
             >
-              <div className="w-full max-w-[100%] relative mx-auto">
-                <Link href="/">
+              <div className="group relative w-full max-w-[100%] mx-auto">
+                <div>
                   <Image
                     src={`${product.images[0].url}?width=115&height=68`}
                     alt={product.name}
@@ -103,13 +101,31 @@ export default function FeaturedCarousel() {
                     height={68}
                     sizes="(max-width: 600px) 100px, 100px"
                   />
-                  <div className="absolute inset-0 bg-black bg-opacity-30 rounded-[4px]" />
-                  <div className="hidden absolute bottom-4 left-1/2 transform -translate-x-1/2">
-                    <div className="text-center select-none text-white font-semibold">
-                      {product.name || "Unnamed Category"}
-                    </div>
-                  </div>
+                  {/* Superposición en hover */}
+                  <div className="absolute inset-0 bg-black bg-opacity-20 rounded-md opacity-0 group-hover:opacity-40 transition-opacity duration-300" />
+                  {/* Botón visible en hover */}
+                  <Button
+                    onClick={() => console.log("asd")}
+                    className="absolute bottom-4 left-1/2 transform -translate-x-1/2 hover:bg-[#0a1d35] bg-[#0a1d35] text-white rounded-md px-3 z-20 xl:px-8 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-[10px] xl:text-[14px]"
+                    data-hover={false}
+                  >
+                    Agregar al carrito
+                  </Button>
+                </div>
+              </div>
+              <div className="flex flex-col flex-grow justify-between">
+                <Link
+                  href={`/productos/${product.slug}`}
+                  className="mt-4 lg:text-xl xs:text-[16px] font-semibold"
+                >
+                  {product.name || "Title"}
                 </Link>
+                <div className="text-lg font-light mt-1 xs:text-[12px] leading-4 xs:max-w-[100px] lg:max-w-full">
+                  {product.description || "Information about the item."}
+                </div>
+                <div className="mt-1 text-xl font-semibold">
+                  ${product.price.toFixed(2)}
+                </div>
               </div>
             </CarouselItem>
           ))}

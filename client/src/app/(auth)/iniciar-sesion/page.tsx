@@ -138,7 +138,7 @@ export default function SignInPage() {
                       <Link href="" className="text-[#188DF9] gont-weight-400 text-[16px]">¿Olvidaste tu clave?</Link>
                     </div>
                   </div>
-                  <div className="pt-4 xl:pt-0 mx-8 xl:mx-0  bg-[#f0f0f0]">
+                  <div className="pt-4  mx-8 xl:mx-0  bg-[#f0f0f0]">
                     <Button type="submit" className="bg-[#0A1D35] w-full py-8 select-none">Iniciar sesión</Button>
 
                     <div className="xl:hidden mt-5">

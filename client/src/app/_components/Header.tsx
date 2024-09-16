@@ -10,6 +10,7 @@ import { RootState, useAppSelector, useAppDispatch } from "@/store/store";
 import { clearUserState } from "@/store/slices/userSlice"
 import Cookies from "js-cookie";
 import Select from "@/app/_components/select";
+import { useMediaQuery } from "@/components/use-media-query";
 
 const getSelectOptions = (user: any) => {
   if (user.role === "Admin") {
@@ -23,6 +24,8 @@ export default function Header() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state: RootState) => state.user);
   const selectOptions = getSelectOptions(user);
+
+  const isDesktop = useMediaQuery("(min-width: 1200px)");
 
   const onSelectChange = (value: string) => {
     if (value === "Cerrar sesión") {
@@ -42,7 +45,7 @@ export default function Header() {
         <Button
           onClick={() => router.push("/cart")}
           size="icon"
-          className="flex sm:hidden ml-5 bg-[transparent] rounded-full hover:bg-[transparent]"
+          className="flex sm:hidden ml-5 bg-[transparent] rounded-full hover:bg-[transparent] shadow-none"
         >
           <img src="/shopping_bag.svg" width={40} height={40} className="text-gray-900" />
         </Button>
@@ -54,7 +57,7 @@ export default function Header() {
         <Button
           onClick={() => router.push("/iniciar-sesion")}
           size="icon"
-          className="flex sm:hidden mr-5 rounded-full hover:bg-[transparent] bg-[transparent]"
+          className="flex sm:hidden mr-5 rounded-full hover:bg-[transparent] bg-[transparent] shadow-none"
         >
           <UserRound size={40} className="text-gray-900  hover:bg-[transparent] bg-[transparent]" />
         </Button>
@@ -123,6 +126,42 @@ export default function Header() {
           }
         `}
       </style>
+
+      {!isDesktop &&
+        (
+          <div className="fixed bottom-4 left-0 right-0 z-10">
+            <div className="bg-[#1d1d1d] max-w-[300px] mx-auto rounded-[40px] px-6 py-2">
+              <div className="w-[250px] mx-auto">
+                <div className="flex flex-row justify-between">
+                  <div>
+                    <Button
+                      onClick={() => router.push("/")}
+                      size="icon" className="rounded-full bg-black w-[60px] h-[60px]">
+                      <img src="/home.svg" alt="" />
+                    </Button>
+                  </div>
+
+                  <div>
+                    <Button
+                      onClick={() => router.push("/productos")}
+                      size="icon" className="rounded-full bg-black w-[60px] h-[60px]">
+                      <img src="/store.svg" alt="" />
+                    </Button>
+                  </div>
+
+                  <div>
+                    <Button
+                      onClick={() => router.push("/contacto")}
+                      size="icon" className="rounded-full bg-black w-[60px] h-[60px]">
+                      <img src="/location.svg" alt="" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      }
     </React.Fragment>
   );
 }

@@ -30,7 +30,7 @@ export class CategorySeeder implements OnModuleInit {
     const categories = ['Conjuntos', 'Remeras', 'Buzos'].map((name) => ({
       name,
       slug: this.slugify(name),
-      image: `${this.apiUrl}/files/${this.slugify(name)}.png`,
+      image: `${this.apiUrl}/files/${this.slugify(name)}.jpeg`,
     }));
 
     await this.categoryRepository.save(categories);

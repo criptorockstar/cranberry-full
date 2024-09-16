@@ -17,7 +17,7 @@ export default function Footer() {
 
           <div className="grid lg:grid-cols-3 gap-6 my-16 xs:mx-auto xs:space-y-12 lg:space-y-0">
             <div className="text-center lg:text-left mx-4">
-              <Icon icon="icon-truck" className="text-[50px]" />
+              <img src="/shipping.svg" className="text-[50px] xl:mx-0 mx-auto" />
               <h4 className="font-semibold text-[24px] leading-[37px] mt-4">
                 Envíos
               </h4>
@@ -27,7 +27,7 @@ export default function Footer() {
             </div>
 
             <div className="text-center lg:text-left mx-4">
-              <Icon icon="icon-whatsapp" className="text-[50px]" />
+              <img src="/whatsapp.svg" className="text-[50px] xl:mx-0 mx-auto" />
               <h4 className="font-semibold text-[24px] leading-[37px] mt-4">
                 WhatsApp
               </h4>
@@ -37,7 +37,7 @@ export default function Footer() {
             </div>
 
             <div className="text-center lg:text-left mx-4">
-              <Icon icon="icon-dollar" className="text-[50px]" />
+              <img src="/money.svg" className="text-[50px] xl:mx-0 mx-auto" />
               <h4 className="font-semibold text-[24px] leading-[37px] mt-4">
                 Abona
               </h4>
@@ -109,8 +109,7 @@ export default function Footer() {
                   </li>
                   <li>
                     <span className="relative mr-8">
-                      <Icon
-                        icon="icon-envelope"
+                      <img
                         className="text-[24px] absolute mt-[5px]"
                       />
                     </span>
@@ -118,9 +117,8 @@ export default function Footer() {
                   </li>
                   <li>
                     <span className="relative mr-8">
-                      <Icon
-                        icon="icon-location"
-                        className="text-[24px] absolute mt-[5px]"
+                      <img src="/location.svg" alt=""
+                        className="text-[24px] absolute mt-[5px] bg-red-500"
                       />
                     </span>
                     Cuenca 497 | Cuenca 683
