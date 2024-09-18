@@ -2,7 +2,6 @@
 
 import React from "react";
 import useAuth from "@/hooks/auth";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/input";
@@ -16,7 +15,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -37,7 +35,6 @@ const FormSchema = z.object({
 
 
 export default function SignInPage() {
-  const router = useRouter();
   const { signIn } = useAuth();
 
   const form = useForm<z.infer<typeof FormSchema>>({

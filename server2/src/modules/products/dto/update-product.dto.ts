@@ -46,7 +46,7 @@ export class UpdateProductDto {
   offer: number;
 
   @Allow()
-  featuredproduct: boolean;
+  featured: boolean;
 
   @IsArray()
   images: any;

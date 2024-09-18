@@ -22,7 +22,7 @@ export class AppService {
     // Redimensiona la imagen
     try {
       const resizedImage = await sharp(file)
-        .resize({ width: 115, height: 68 }) // Ajusta el tamaño según sea necesario
+        .resize({ width: 109, height: 125 }) // Ajusta el tamaño según sea necesario
         .toBuffer();
 
       // Establece el tipo de contenido y envía la imagen redimensionada

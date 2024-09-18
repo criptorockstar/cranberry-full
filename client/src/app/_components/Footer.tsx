@@ -88,7 +88,7 @@ export default function Footer() {
                     <Link href="/productos">Productos</Link>
                   </li>
                   <li>
-                    <Link href="/contacto">Contacto</Link>
+                    <Link href="/encuentranos">Encuentranos</Link>
                   </li>
                 </ul>
               </div>
@@ -113,12 +113,12 @@ export default function Footer() {
                         className="text-[24px] absolute mt-[5px]"
                       />
                     </span>
-                    example@gmail.com
+                    cranberrymayorista@gmail.com
                   </li>
                   <li>
                     <span className="relative mr-8">
-                      <img src="/location.svg" alt=""
-                        className="text-[24px] absolute mt-[5px] bg-red-500"
+                      <img src="/location.svg"
+                        className="text-[24px] absolute mt-[5px]"
                       />
                     </span>
                     Cuenca 497 | Cuenca 683

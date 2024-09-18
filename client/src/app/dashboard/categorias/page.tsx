@@ -18,7 +18,6 @@ import MenuComponent from "@/app/dashboard/_components/menu"
 import DrawerComponent from "@/app/dashboard/_components/drawer"
 import { Tag, Globe, LayoutDashboard, NotepadText } from "lucide-react";
 import { deleteCategory as deleteCategoryFromSlice } from "@/store/slices/categorySlice";
-import useAdmin from "@/hooks/useAdmin";
 
 export type Category = {
   id: number; // Asegúrate de que el ID sea de tipo number

@@ -43,7 +43,7 @@ export default function CategoriesCarousel() {
         }}
       >
         <div className="relative">
-          <div className="mb-4 font-weight-600 xl:text-[30px]">
+          <div className="mb-4 font-weight-600 text-[20px] xl:text-[30px]">
             Categorias
           </div>
 
@@ -56,17 +56,17 @@ export default function CategoriesCarousel() {
           {categories.map((category) => (
             <CarouselItem
               key={category.id}
-              className="ss:basis-1/3 sm:basis-1/3 md:basis-1/4 lg:basis-1/4"
+              className="basis-1/3 sm:basis-1/3 md:basis-1/4 lg:basis-1/4"
             >
               <div className="w-full max-w-[100%] relative mx-auto">
-                <Link href="/">
+                <Link href={`/productos/producto/${category.slug}`}>
                   <Image
                     src={`${category.image}`}
                     alt={category.name}
                     className="object-cover w-full h-full"
-                    width={115}
-                    height={68}
-                    sizes="(max-width: 600px) 100px, 100px"
+                    width={109}
+                    height={125}
+                    sizes="(max-width: 600px) 109px, 125px"
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-30 rounded-[4px]" />
                   <div className="hidden absolute bottom-4 left-1/2 transform -translate-x-1/2">

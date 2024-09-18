@@ -70,13 +70,13 @@ export default function FeaturedCarousel() {
 
   return (
     <React.Fragment>
-      <Carousel className="w-full container mx-auto mt-20"
+      <Carousel className="w-full max-w-[1200px] mx-auto mt-20"
         opts={{
           align: "start",
         }}
       >
         <div className="relative">
-          <div className="mb-4 font-weight-600 xl:text-[30px]">
+          <div className="mb-4 font-weight-600 text-[20px] xl:text-[30px]">
             Productos destacados
           </div>
 
@@ -89,7 +89,7 @@ export default function FeaturedCarousel() {
           {products.map((product) => (
             <CarouselItem
               key={product.id}
-              className="ss:basis-1/3 sm:basis-1/3 md:basis-1/4 lg:basis-1/4"
+              className="basis-1/3 sm:basis-1/3 md:basis-1/4 lg:basis-1/4"
             >
               <div className="group relative w-full max-w-[100%] mx-auto">
                 <div>
@@ -97,9 +97,9 @@ export default function FeaturedCarousel() {
                     src={`${product.images[0].url}?width=115&height=68`}
                     alt={product.name}
                     className="object-cover w-full h-full"
-                    width={115}
-                    height={68}
-                    sizes="(max-width: 600px) 100px, 100px"
+                    width={109}
+                    height={125}
+                    sizes="(max-width: 600px) 109px, 125px"
                   />
                   {/* Superposición en hover */}
                   <div className="absolute inset-0 bg-black bg-opacity-20 rounded-md opacity-0 group-hover:opacity-40 transition-opacity duration-300" />

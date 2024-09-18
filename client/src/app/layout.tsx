@@ -18,27 +18,27 @@ const manrope = localFont({
     },
     {
       path: "./fonts/Manrope-ExtraLight.ttf",
-      weight: "700",
+      weight: "200",
       style: "normal",
     },
     {
       path: "./fonts/Manrope-Light.ttf",
-      weight: "700",
+      weight: "300",
       style: "normal",
     },
     {
       path: "./fonts/Manrope-Medium.ttf",
-      weight: "700",
+      weight: "500",
       style: "normal",
     },
     {
       path: "./fonts/Manrope-Regular.ttf",
-      weight: "700",
+      weight: "400",
       style: "normal",
     },
     {
       path: "./fonts/Manrope-SemiBold.ttf",
-      weight: "700",
+      weight: "600",
       style: "normal",
     },
   ],

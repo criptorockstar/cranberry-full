@@ -11,6 +11,20 @@ import { clearUserState } from "@/store/slices/userSlice"
 import Cookies from "js-cookie";
 import Select from "@/app/_components/select";
 import { useMediaQuery } from "@/components/use-media-query";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const getSelectOptions = (user: any) => {
   if (user.role === "Admin") {
@@ -39,6 +53,14 @@ export default function Header() {
     }
   };
 
+
+  const logout = () => {
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
+    dispatch(clearUserState());
+    router.push("/iniciar-sesion");
+  };
+
   return (
     <React.Fragment>
       <div className="flex justify-between items-center container mx-auto">
@@ -54,13 +76,31 @@ export default function Header() {
           <Image src="/logo.svg" alt="logo" width={100} height={100} />
         </div>
 
-        <Button
-          onClick={() => router.push("/iniciar-sesion")}
-          size="icon"
-          className="flex sm:hidden mr-5 rounded-full hover:bg-[transparent] bg-[transparent] shadow-none"
-        >
-          <UserRound size={40} className="text-gray-900  hover:bg-[transparent] bg-[transparent]" />
-        </Button>
+        {!user.email ? (
+          <Button
+            onClick={() => router.push("/iniciar-sesion")}
+            size="icon"
+            className="flex sm:hidden mr-5 rounded-full hover:bg-[transparent] bg-[transparent] shadow-none"
+          >
+            <UserRound size={40} className="text-gray-900  hover:bg-[transparent] bg-[transparent]" />
+          </Button>
+        ) : (
+          <div
+            className="flex sm:hidden mr-2.5 rounded-full hover:bg-[transparent] bg-[transparent] shadow-none"
+          >
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <UserRound size={40} className="text-gray-900  hover:bg-[transparent] bg-[transparent]" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem><Link href="/dashboard">Administrar</Link></DropdownMenuItem>
+                <DropdownMenuItem><div onClick={logout}>Cerrar sesión</div></DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )}
 
         <ul className="items-center gap-8 font-weight-500 hidden sm:flex">
           <li>
@@ -130,13 +170,13 @@ export default function Header() {
       {!isDesktop &&
         (
           <div className="fixed bottom-4 left-0 right-0 z-10">
-            <div className="bg-[#1d1d1d] max-w-[300px] mx-auto rounded-[40px] px-6 py-2">
+            <div className="bg-[#1d1d1d] max-w-[350px] h-[65px] mx-auto rounded-[40px]">
               <div className="w-[250px] mx-auto">
-                <div className="flex flex-row justify-between">
+                <div className="flex flex-row justify-between items-center h-[65px]">
                   <div>
                     <Button
                       onClick={() => router.push("/")}
-                      size="icon" className="rounded-full bg-black w-[60px] h-[60px]">
+                      size="icon" className="rounded-full bg-[#191919] w-[50px] h-[50px]">
                       <img src="/home.svg" alt="" />
                     </Button>
                   </div>
@@ -144,15 +184,15 @@ export default function Header() {
                   <div>
                     <Button
                       onClick={() => router.push("/productos")}
-                      size="icon" className="rounded-full bg-black w-[60px] h-[60px]">
+                      size="icon" className="rounded-full bg-[#191919] w-[50px] h-[50px]">
                       <img src="/store.svg" alt="" />
                     </Button>
                   </div>
 
                   <div>
                     <Button
-                      onClick={() => router.push("/contacto")}
-                      size="icon" className="rounded-full bg-black w-[60px] h-[60px]">
+                      onClick={() => router.push("/encuentranos")}
+                      size="icon" className="rounded-full bg-[#191919] w-[50px] h-[50px]">
                       <img src="/location.svg" alt="" />
                     </Button>
                   </div>

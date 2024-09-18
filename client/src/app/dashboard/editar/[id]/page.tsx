@@ -325,9 +325,10 @@ export default function EditProduct({ params }: any) {
       name: data.name,
       description: data.description,
       price: Number(data.price),
-      offer: data.offer,
+      offer: Number(data.offer),
       stock: data.stock,
       quantity: data.quantity,
+      featured: featuredObject,
       categories: data.categories,
       colors: selectedColors,
       images: [...imageObject],
@@ -373,7 +374,7 @@ export default function EditProduct({ params }: any) {
             <div>Editar producto</div>
           </div>
 
-          <div className="mt-2 flex flex-row justify-end items-center gap-4">
+          <div className="mt-2 lg:hidden flex flex-row justify-end items-center gap-4">
             <Button size="icon" className="bg-[#0a1d35]" onClick={handleSubmit(onSubmit)}>
               <Save />
             </Button>

@@ -146,7 +146,8 @@ export class ProductsService {
       description: addProductDto.description,
       stock: addProductDto.stock,
       price: addProductDto.price,
-      offer: addProductDto.offer,
+      featured: addProductDto.featured || false,
+      offer: addProductDto.offer || 0,
       quantity:
         addProductDto.quantity === 'ilimitado'
           ? Quantities.UNLIMITED
@@ -156,6 +157,8 @@ export class ProductsService {
       sizes: sizeEntities,
       images: imageEntities,
     });
+
+    console.log(newProduct);
 
     await this.productRepository.save(newProduct);
 
@@ -167,8 +170,11 @@ export class ProductsService {
       throw new Error('File not provided');
     }
 
+    // Reemplaza los espacios en el nombre del archivo por guiones bajos
+    const sanitizedFilename = file.filename.trim().replace(/\s+/g, '_');
+
     // Asegúrate de que el archivo se ha subido correctamente
-    const filePath = `http://localhost:5001/files/${file.filename}`;
+    const filePath = `http://localhost:5001/files/${sanitizedFilename}`;
 
     // Devuelve la URL donde se podrá acceder al archivo
     return filePath;

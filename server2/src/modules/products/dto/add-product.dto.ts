@@ -4,6 +4,7 @@ export interface CategoryDto {
   label: string;
 }
 
+import { Optional } from '@nestjs/common';
 // Update AddProductDto to use the CategoryDto type
 import {
   IsNotEmpty,
@@ -41,7 +42,7 @@ export class AddProductDto {
   @IsNumber({}, { message: 'price: Debe ser un número' })
   price: number;
 
-  @IsNotEmpty({ message: 'offer: Debe ingresar la oferta' })
+  @Optional()
   @IsNumber({}, { message: 'offer: Debe ser un número' })
   offer: number;
 
@@ -49,7 +50,7 @@ export class AddProductDto {
   images: any;
 
   @Allow()
-  featuredproduct: boolean;
+  featured: boolean;
 
   @IsArray({ message: 'colors: Debe ser una lista de colores' })
   @ArrayNotEmpty({ message: 'colors: Debe ingresar al menos un color' })

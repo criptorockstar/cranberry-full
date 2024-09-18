@@ -52,7 +52,7 @@ export default function AddProduct() {
   const sizes = useAppSelector((state) => state.sizes.sizes);
 
   const [images, setImages] = useState<File[]>([]);
-  const [imageObject, setImageObject] = useState<string[]>([]); // Cambia 'any' a 'string[]'
+  const [imageObject, setImageObject] = useState<string[]>([]);
   const [imageError, setImageError] = useState<string | null>(null);
   const [colorError, setColorError] = useState<string | null>(null);
   const [sizeError, setSizeError] = useState<string | null>(null);
@@ -187,12 +187,11 @@ export default function AddProduct() {
       name: data.name,
       description: data.description,
       price: Number(data.price),
-      offer: data.offer,
+      offer: Number(data.offer),
       stock: data.stock,
-      featured: data.featured,
+      featured: featuredObject,
       quantity: data.quantity,
       categories: data.categories,
-      featuredproduct: data.featured,
       colors: selectedColors,
       images: [...imageObject],
       sizes: selectedSizes
@@ -212,6 +211,7 @@ export default function AddProduct() {
             });
           }
         }
+        console.log(error.response.data.errors);
       } else {
         console.error("Ocurrió un error inesperado:", error);
       }
@@ -269,7 +269,7 @@ export default function AddProduct() {
             <div>Agregar producto</div>
           </div>
 
-          <div className="mt-2 flex flex-row justify-end items-center gap-4">
+          <div className="mt-2 flex lg:hidden flex-row justify-end items-center gap-4">
             <Button size="icon" className="bg-[#0a1d35]" onClick={handleSubmit(onSubmit)}>
               <Save />
             </Button>

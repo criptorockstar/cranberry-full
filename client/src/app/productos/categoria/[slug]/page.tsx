@@ -16,7 +16,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import Filters from "./_components/Filters"
+import Filters from "../../_components/Filters"
 
 export type Product = {
   id: number;
@@ -35,7 +35,7 @@ export type Product = {
   categories: Category[];
 };
 
-export default function ProductsPage() {
+export default function ProductsByCategoryPage() {
   const dispatch = useAppDispatch();
   const { getProducts } = useProducts();
   const products = useAppSelector((state) => state.products.products);
@@ -119,9 +119,16 @@ export default function ProductsPage() {
 
   return (
     <React.Fragment>
+      <DrawerComponent items={items} />
+
+
       <div className="flex flex-col min-h-screen max-w-[1200px] mx-auto">
         {/* Contenedor que crece para ocupar todo el espacio */}
         <div className=" flex flex-row">
+          <div>
+            <MenuComponent />
+          </div>
+
           <div className="max-w-[200px] xl:hidden">
             <Accordion type="single" collapsible>
               <AccordionItem value="item-1">

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// Define and export interfaces
+// Define interfaces
 export interface Image {
   id: number;
   url: string;
@@ -44,12 +44,10 @@ export interface Product {
 
 export interface IProductState {
   products: Product[];
-  currentProduct: Product | null; // Add this for handling single product
 }
 
 const initialState: IProductState = {
   products: [],
-  currentProduct: null, // Initialize to null
 };
 
 export const productSlice = createSlice({
@@ -59,9 +57,6 @@ export const productSlice = createSlice({
     setProducts: (state, action: PayloadAction<Product[]>) => {
       state.products = action.payload;
     },
-    setCurrentProduct(state, action: PayloadAction<Product | null>) {
-      state.currentProduct = action.payload;
-    },
     deleteProduct(state, action: PayloadAction<number>) {
       state.products = state.products.filter(
         (product) => product.id !== action.payload,
@@ -69,15 +64,18 @@ export const productSlice = createSlice({
     },
     clearProductState: (state) => {
       state.products = [];
-      state.currentProduct = null; // Clear the current product as well
     },
   },
 });
 
-export const {
-  setProducts,
-  setCurrentProduct,
-  deleteProduct,
-  clearProductState,
-} = productSlice.actions;
+// Selector para obtener el producto basado en el slug
+export const getCurrentProduct = (
+  state: IProductState,
+  slug: string,
+): Product | undefined => {
+  return state.products.find((product) => product.slug === slug);
+};
+
+export const { setProducts, deleteProduct, clearProductState } =
+  productSlice.actions;
 export const productReducer = productSlice.reducer;
