@@ -6,9 +6,9 @@ import { useAppDispatch, useAppSelector } from '@/store/store';
 import { setProducts, getCurrentProduct } from "@/store/slices/productSlice";
 import useProducts from "@/hooks/useProducts";
 import { Product, Image as ImageProduct, Color, Size, Category } from '@/store/slices/productSlice';
-import Image from "next/image"
-import { Input } from "@/components/input"
-import { Button } from "@/components/ui/button"
+import Image from "next/image";
+import { Input } from "@/components/input";
+import { Button } from "@/components/ui/button";
 import {
   Carousel,
   CarouselContent,
@@ -16,11 +16,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import Link from "next/link"
+import Link from "next/link";
 import { useMediaQuery } from "@/components/use-media-query";
 import { Tag, Globe, LayoutDashboard, NotepadText } from "lucide-react";
-import MenuComponent from "@/app/dashboard/_components/menu"
-import DrawerComponent from "@/app/dashboard/_components/drawer"
+import MenuComponent from "@/app/dashboard/_components/menu";
+import DrawerComponent from "@/app/dashboard/_components/drawer";
 
 export default function ProductPage() {
   const isDesktop = useMediaQuery("(min-width: 1200px)");
@@ -84,7 +84,9 @@ export default function ProductPage() {
   const normalizedSlug = Array.isArray(slug) ? slug[0] : slug;
 
   // Ensure that `normalizedSlug` is a string before passing it
-  const currentProduct = normalizedSlug ? getCurrentProduct({ products }, normalizedSlug) : undefined;
+  const currentProduct = normalizedSlug
+    ? getCurrentProduct({ products, currentProduct: null }, normalizedSlug)
+    : undefined;
 
   const items = [
     { slug: "/dashboard", text: "Productos", icon: <Tag size={20} /> },
@@ -96,7 +98,6 @@ export default function ProductPage() {
   if (!currentProduct) {
     return <div>Loading...</div>;
   }
-
 
   return (
     <React.Fragment>
@@ -257,44 +258,22 @@ export default function ProductPage() {
           {products.map((product) => (
             <CarouselItem
               key={product.id}
-              className="basis-1/3 sm:basis-1/3 md:basis-1/4 lg:basis-1/4"
+              className="group relative mx-2 w-[200px] sm:w-[100px]"
             >
-              <div className="group relative w-full max-w-[100%] mx-auto">
-                <div>
-                  <Image
-                    src={`${product.images[0].url}?width=115&height=68`}
-                    alt={product.name}
-                    className="object-cover w-full h-full"
-                    width={109}
-                    height={125}
-                    sizes="(max-width: 600px) 109px, 125px"
-                  />
-                  {/* Superposición en hover */}
-                  <div className="absolute inset-0 bg-black bg-opacity-20 rounded-md opacity-0 group-hover:opacity-40 transition-opacity duration-300" />
-                  {/* Botón visible en hover */}
-                  <Button
-                    onClick={() => console.log("asd")}
-                    className="absolute bottom-4 left-1/2 transform -translate-x-1/2 hover:bg-[#0a1d35] bg-[#0a1d35] text-white rounded-md px-3 z-20 xl:px-8 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-[10px] xl:text-[14px]"
-                    data-hover={false}
-                  >
-                    Agregar al carrito
-                  </Button>
-                </div>
-              </div>
-              <div className="flex flex-col flex-grow justify-between">
-                <Link
-                  href={`/productos/${product.slug}`}
-                  className="mt-4 lg:text-xl xs:text-[16px] font-semibold"
-                >
-                  {product.name || "Title"}
-                </Link>
-                <div className="text-lg font-light mt-1 xs:text-[12px] leading-4 xs:max-w-[100px] lg:max-w-full">
-                  {product.description || "Information about the item."}
-                </div>
-                <div className="mt-1 text-xl font-semibold">
-                  ${product.price.toFixed(2)}
-                </div>
-              </div>
+              <Link href={`/productos/producto/${product.slug}`}>
+                <a>
+                  <div>
+                    <Image
+                      src={product.images[0].url}
+                      alt={product.name}
+                      className="object-cover w-full h-full rounded-md"
+                      width={200}
+                      height={250}
+                      sizes="(max-width: 600px) 100px, 200px"
+                    />
+                  </div>
+                </a>
+              </Link>
             </CarouselItem>
           ))}
         </CarouselContent>

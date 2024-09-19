@@ -70,7 +70,7 @@ export default function FeaturedCarousel() {
 
   return (
     <React.Fragment>
-      <Carousel className="w-full max-w-[1200px] mx-auto mt-20"
+      <Carousel className="w-full container mx-auto mt-20"
         opts={{
           align: "start",
         }}
