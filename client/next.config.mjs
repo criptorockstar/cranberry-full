@@ -16,12 +16,10 @@ const nextConfig = {
       {
         protocol: "http",
         hostname: "api.cranberrymayorista.com",
-        port: "5001",
       },
       {
         protocol: "https",
         hostname: "api.cranberrymayorista.com",
-        port: "5001",
       },
     ],
   },
